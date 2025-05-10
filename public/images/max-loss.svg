@@ -1,0 +1,23 @@
+<svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_i_1_25818)">
+<rect width="52" height="52" rx="12" fill="#272837"/>
+<path d="M18.4633 18.5C18.145 18.628 17.8632 18.7889 17.6075 18.9909C17.4068 19.1494 17.2212 19.324 17.0528 19.5129C16 20.6938 16 22.4625 16 26C16 29.5375 16 31.3062 17.0528 32.4871C17.2212 32.676 17.4068 32.8506 17.6075 33.0091C18.8621 34 20.7414 34 24.5 34H27.5C30.4923 34 32.2568 34 33.5 33.5" stroke="#F74418" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M22 18.0158C22.7277 18 23.5544 18 24.5 18H27.5C31.2586 18 33.1379 18 34.3925 18.9909C34.5932 19.1494 34.7788 19.324 34.9472 19.5129C36 20.6938 36 22.4625 36 26C36 28.3126 36 29.8693 35.7058 31" stroke="#F74418" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 16L36 36" stroke="#F74418" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M27.7418 27.7422C27.2876 28.2094 26.6523 28.4996 25.9492 28.4996C24.5685 28.4996 23.4492 27.3803 23.4492 25.9996C23.4492 25.2966 23.7394 24.6613 24.2066 24.207" stroke="#F74418" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M19 26L20 26" stroke="#F74418" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M32 26L33 26" stroke="#F74418" stroke-width="1.5" stroke-linecap="round"/>
+</g>
+<defs>
+<filter id="filter0_i_1_25818" x="0" y="0" width="52" height="53" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1"/>
+<feGaussianBlur stdDeviation="0.5"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.16 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_1_25818"/>
+</filter>
+</defs>
+</svg>

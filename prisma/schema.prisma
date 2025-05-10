@@ -1,0 +1,375 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountType {
+  TWO_STEP
+  THREE_STEP
+}
+
+enum AccountStatus {
+  CHALLENGE
+  FUNDED
+  BREACHED
+}
+
+// enum ProfileLevels {
+//   NEWBIE
+//   BRONZE
+//   SILVER
+//   GOLD
+//   PLATINUM
+//   HERO
+// }
+
+enum ProfileLevels {
+  Beginner
+  Superviser
+  Coach
+  TopTier
+  RegionalPlayer
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String?
+  country   String?  @default("")
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profileLevel ProfileLevels @default(Beginner)
+  // profileLevel ProfileLevels @default(NEWBIE)
+  picksWon     Int           @default(0)
+  kycVerified  Boolean       @default(false)
+
+  twoFactorCode    String?
+  twoFactorSecret  String?
+  ascii            String?
+  otpUrl           String?
+  twoFactorExpires DateTime?
+
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
+  phoneNumber       String?
+  displayStatsLive  Boolean @default(false)
+  phoneNotification Boolean @default(false)
+  emailNotification Boolean @default(false)
+
+  address     String?
+  dateOfBirth DateTime?
+  avatar      String?
+
+  agreement1 Boolean @default(false)
+  agreement2 Boolean @default(false)
+  agreement3 Boolean @default(false)
+
+  referralCode     String?
+  referredBy       String?
+  referralBonus    Float     @default(0.0)
+  totalEarned      Float     @default(0.0)
+  totalReferrals   Int       @default(0)
+  totalReferPayout Float     @default(0.0)
+  referPayoutTimer DateTime?
+
+  accounts             Account[]
+  PaymentCard          PaymentCard[]
+  AccountInvoices      AccountInvoices[]
+  Bets                 Bets[]
+  PayoutRequests       ReferPayoutRequests[]
+  FundedPayoutRequests FundedPayoutRequests[]
+
+  @@map("users")
+}
+
+model Account {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+
+  accountType   AccountType // 2 step, 3 step
+  accountSize   String // 1k, 5k, 10k, 50k, 100k
+  status        AccountStatus // Challenge, Funded, Breached
+  balance       Float // Store account balance
+  accountNumber String // Store account number
+  phase         Int           @default(1) // Store account phase
+  picks         Int           @default(0) // Store account picks
+
+  totalLoss             Float?   @default(0) // Store total loss
+  dailyLoss             Float? // Store daily loss limit
+  minBetPeriod          DateTime // Store minimum bet period
+  maxBetPeriod          DateTime // Store maximum bet period
+  minBetPeriodCompleted Boolean  @default(false) // Store minimum bet period completed
+
+  totalFundedPayout Float     @default(0.0)
+  totalFundedAmount Float     @default(0.0)
+  fundedPayoutTimer DateTime?
+
+  paymentMethod  String? // Store payment method details
+  user           User?            @relation(fields: [userId], references: [id])
+  billingAddress BillingAddress[]
+  paymentCard    PaymentCard[]
+
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  AccountInvoices      AccountInvoices[]
+  Bets                 Bets[]
+  FundedPayoutRequests FundedPayoutRequests[]
+  BalanceHistory       BalanceHistory[]
+
+  @@map("accounts")
+}
+
+model ReferralHistory {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String  @db.ObjectId
+  referredUserId String  @db.ObjectId
+  orderValue     Float?
+  orderNumber    String?
+  commission     Float?
+  status         String?
+
+  createdAt DateTime @default(now())
+
+  @@map("referralhistory")
+}
+
+model BillingAddress {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  accountId String @db.ObjectId
+
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  country   String
+  state     String
+  city      String
+  zipCode   String
+  address   String
+
+  account Account @relation(fields: [accountId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("billingaddress")
+}
+
+model PaymentCard {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  accountId String @db.ObjectId
+  userId    String @db.ObjectId
+
+  cardNumber String // Store encrypted card number
+  cardExpiry String
+  country    String
+  zipCode    String
+  cardCvv    String // Store encrypted cvv
+
+  account Account @relation(fields: [accountId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("paymentcard")
+}
+
+model AccountInvoices {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  accountId     String? @db.ObjectId
+  userId        String? @db.ObjectId
+  paymentCardId String? @db.ObjectId
+
+  eventId       String?
+  invoiceId     String?
+  invoiceNumber String?
+  amount        Float?
+
+  status        String?
+  paymentMethod String?
+  paymentDate   DateTime?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  User      User?     @relation(fields: [userId], references: [id])
+  Account   Account?  @relation(fields: [accountId], references: [id])
+
+  metadata Json? // Add this field to store metadata
+
+  @@map("accountinvoices")
+}
+
+enum BetResult {
+  WIN
+  LOSE
+  DRAW
+}
+
+enum BetStatus {
+  OPENED
+  CLOSED
+}
+
+enum OddsFormat {
+  DECIMAL
+  AMERICAN
+}
+
+model Bets {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String @db.ObjectId
+  accountId String @db.ObjectId
+
+  sportKey   String[] // League or sport category
+  sport      String[] // Sport name
+  eventId    String[] // Fixture IDs
+  event      String[] // Home vs Away teams
+  league     String[] // League names
+  team       String[] // Participating teams
+  odds       Float
+  pick       Float
+  winnings   Float
+  oddsFormat OddsFormat
+
+  bets Json? // JSON field to store detailed bet information
+
+  betStatus BetStatus
+  betResult BetResult?
+  betDate   DateTime
+  gameDate  DateTime[] // Array to accommodate multiple game dates
+
+  user    User    @relation(fields: [userId], references: [id])
+  account Account @relation(fields: [accountId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bets")
+}
+
+enum CronJobType {
+  objectiveMin
+  objectiveMax
+  inactivity
+}
+
+enum CronJobStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model CronJobs {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  accountId String @db.ObjectId
+
+  jobName   String
+  jobStatus CronJobStatus
+  jobDate   String
+  type      CronJobType
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cronjobs")
+}
+
+enum Currency {
+  USDT_ERC20
+  ETH_ERC20
+}
+
+enum PayoutStaus {
+  PAID
+  PENDING
+  DECLINED
+}
+
+model ReferPayoutRequests {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+
+  amount         Float
+  status         PayoutStaus
+  currency       Currency
+  networkAddress String
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payoutrequests")
+}
+
+model FundedPayoutRequests {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String @db.ObjectId
+  accountId String @db.ObjectId
+
+  amount         Float
+  status         PayoutStaus
+  currency       Currency
+  networkAddress String
+
+  user    User    @relation(fields: [userId], references: [id])
+  account Account @relation(fields: [accountId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("fundedpayoutrequests")
+}
+
+enum NotificationType {
+  MESSAGE
+  ALERT
+  UPDATE
+}
+
+model Notification {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String // ID of the user to notify
+  type      NotificationType // e.g., 'message', 'alert', 'update'
+  content   String // Notification message
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+}
+
+enum CertificateType {
+  FUNDED
+  PAYOUT
+  LIFETIME_PAYOUT
+  PHASE
+  PROFILE_LEVEL
+}
+
+model CertificateHistory {
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String          @db.ObjectId
+  accountId String          @db.ObjectId
+  type      CertificateType
+  createdAt DateTime        @default(now())
+}
+
+model BalanceHistory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  accountId String   @db.ObjectId
+  balance   Float // Store account balance at the end of the day
+  date      DateTime // Store date of balance snapshot
+  account   Account  @relation(fields: [accountId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("balancehistory")
+}
