@@ -116,7 +116,6 @@ const Page = ({ searchParams: { referrerCode } }: props) => {
 
   const [isChecked, setIsChecked] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  let newCode = referrerCode;
   async function onSubmit(values: any) {
     setIsLoading(true);
     try {
@@ -135,6 +134,7 @@ const Page = ({ searchParams: { referrerCode } }: props) => {
         throw new Error("Sign up failed");
       }
 
+      await axios.post("/api/newsletter", { email: values.email });
       router.push("/api/auth/signin");
       toast.success("Account created successfully.");
     } catch (error: any) {

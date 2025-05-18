@@ -1,19 +1,23 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Roboto, Urbanist } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import NextTopLoader from "nextjs-toploader";
 import AuthProvider from "./api/auth/AuthProvider";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Providers } from "./providers";
-import Image from "next/image";
-import Link from "next/link";
 
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-roboto",
+});
+
+const urbanist = Urbanist({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-urbanist",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +34,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning suppressContentEditableWarning>
       <Providers>
         <AuthProvider>
-          <body className={roboto.className}>
+          <body className={`${roboto.className} ${urbanist.className}`}>
             <NextTopLoader
               color="blue"
               initialPosition={0.08}

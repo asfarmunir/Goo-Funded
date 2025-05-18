@@ -46,7 +46,7 @@ interface Bet {
   league: string;
 }
 
-const page = () => {
+const Page = () => {
   const [tab, setTab] = useState("football");
   const [leagueTab, setLeagueTab] = useState("");
   const [oddsFormat, setOddsFormat] = useState<oddsType>("decimal");
@@ -56,7 +56,12 @@ const page = () => {
   const [sports, setSports] = useState<any>([]);
   const [leagues, setLeagues] = useState<any>([]);
   const [search, setSearch] = useState("");
-  const [userHasAccounts, setUserHasAccounts] = useState(false);
+  const [bookmakers, setBookmakers] = useState<any>([
+    {
+      eventId: "",
+      bookmakerName: "",
+    },
+  ]);
 
   // SPORTS DATA
   const { data, isPending, isError } = useGetSports();
@@ -341,7 +346,7 @@ const page = () => {
           </>
         )}
 
-        <div className="flex gap-4 flex-col-reverse md:flex-row items-start">
+        <div className="flex relative overflow-visible  gap-4 flex-col-reverse md:flex-row items-start">
           <div className=" w-full flex gap-4 flex-col rounded-2xl mb-8 items-start">
             <div className="w-full bg-white shadow-inner shadow-gray-200 rounded-xl p-5 py-7 flex-col md:flex-row  flex items-center justify-between gap-4">
               <div className="flex flex-col  items-start justify-start  w-full md:w-fit  ">
@@ -393,7 +398,7 @@ const page = () => {
               </div>
             </div>
             <div className=" w-full transition-all border border-gray-200 rounded-xl bg-[#F8F8F8]  flex flex-col">
-              <div className="flex flex-col md:flex-row  mb-4 w-full items-center justify-between">
+              <div className="flex flex-col md:flex-row   w-full items-center justify-between">
                 <div className="flex  items-center gap-3 w-full p-2 md:p-6 md:pr-32 ">
                   {!isPending && (
                     <LeaguesTabs
@@ -414,6 +419,7 @@ const page = () => {
                 focus:border-none
                 placeholder-slate-900 
                 uppercase
+                2xl:w-80
                 "
                       placeholder={"search..."}
                       value={search}
@@ -461,12 +467,14 @@ const page = () => {
                   setFeaturedMatch={setFeaturedMatch}
                   account={account}
                   search={search}
+                  bookmakers={bookmakers}
+                  setBookmakers={setBookmakers}
                 />
               )}
             </div>
           </div>
           <div
-            className={` w-full md:w-[50%]  border border-gray-200 p-4 rounded-xl bg-white  flex flex-col`}
+            className={` w-full md:w-[50%] sticky top-4  overflow-y-auto  border border-gray-200 p-4 rounded-xl bg-white  flex flex-col`}
           >
             <div className="flex items-start gap-4 mb-8 md:items-center justify-between md:mb-5  flex-col md:flex-row w-full">
               <h2 className="font-bold text-lg capitalize ">betting slip</h2>
@@ -553,7 +561,7 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
 
 const SkeletonLoader = () => {
   return (
@@ -608,8 +616,10 @@ const LeaguesTabs = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center justify-center p-3.5 px-5 gap-4 bg-white rounded-full ">
-            <p className="text-xs 2xl:text-sm font-bold">Leagues</p>
+          <button className="flex items-center justify-center p-3.5 px-5 2xl:px-8 gap-4 bg-white rounded-full ">
+            <p className="text-xs 2xl:text-sm font-bold">
+              {leagues?.find((league: any) => league.key === leagueTab)?.title}
+            </p>
             <ChevronDown />
           </button>
         </DropdownMenuTrigger>

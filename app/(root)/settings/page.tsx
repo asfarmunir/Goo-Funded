@@ -38,7 +38,7 @@ const Page = () => {
           priority
         />
         <p className=" text-[1.1rem]  text-vintage-50 font-semibold ">
-          Lets Place Some Trades{" "}
+          Lets Place Some Picks{" "}
         </p>
       </div>
       {user && (

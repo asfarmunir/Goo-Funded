@@ -48,7 +48,6 @@ const Sidebar = () => {
   };
 
   const user = userStore((state) => state.user);
-  console.log("🚀 ~ Sidebar ~ user:", user);
 
   const account = accountStore((state) => state.account);
   const { mutate: markAsRead } = useMarkNotification({
