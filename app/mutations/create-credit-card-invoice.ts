@@ -1,5 +1,5 @@
 export const createCreditCardInvoice = async (data: any) => {
-  const response = await fetch("/api/charge-credit-card", {
+  const response = await fetch("/api/person-to-person", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

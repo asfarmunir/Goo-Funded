@@ -49,16 +49,7 @@ export default function RootLayout({
             {children}
             <ToastContainer />
 
-            <Toaster position="top-center" />
-            {/* <Link href={"https://proppicks.com/"} target="_blank">
-              <Image
-                src="/images/propicks.svg"
-                alt="bg"
-                width={200}
-                height={200}
-                className="absolute bottom-4 right-2 z-50"
-              />
-            </Link> */}
+            <Toaster position="bottom-center" />
           </body>
         </AuthProvider>
       </Providers>

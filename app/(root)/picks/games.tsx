@@ -2,9 +2,9 @@
 import { useGetGames } from "@/app/hooks/useGetGames";
 import { ALL_STEP_CHALLENGES } from "@/lib/constants";
 import { americanToDecimalOdds, getOriginalAccountValue } from "@/lib/utils";
-import { LoaderCircle, RefreshCw } from "lucide-react";
+import { LoaderCircle, RefreshCw, Info } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,8 +42,11 @@ interface Bet {
   sport: string;
   event: string;
   league: string;
-  market: string;
-  point?: number;
+  betDetails: {
+    market: string;
+    point: number | null;
+    bookmaker: string;
+  };
 }
 
 const GamesTable = ({
@@ -59,7 +62,6 @@ const GamesTable = ({
   bookmakers,
   setBookmakers,
 }: GetGamesParams) => {
-  // GAMES DATA
   const {
     data: games,
     isLoading,
@@ -79,13 +81,12 @@ const GamesTable = ({
   useEffect(() => {
     refetch();
     setLastUpdated(new Date());
-    setCurrentPage(1); // Reset to first page when odds format changes
-  }, [oddsFormat]);
+    setCurrentPage(1);
+  }, [oddsFormat, refetch]);
 
   useEffect(() => {
     if (games && games.length > 0) {
       setFeaturedMatch(games[0]);
-      // Initialize selected bookmakers for each game
       const initialBookmakers: Record<string, string> = {};
       games.forEach((game: any) => {
         if (game.bookmakers && game.bookmakers.length > 0) {
@@ -94,9 +95,8 @@ const GamesTable = ({
       });
       setSelectedBookmakers(initialBookmakers);
     }
-  }, [games]);
+  }, [games, setFeaturedMatch]);
 
-  // SEARCH FILTER
   const filteredGames = useMemo(() => {
     if (!isLoading && search !== "") {
       return games?.filter(
@@ -108,7 +108,6 @@ const GamesTable = ({
     return games;
   }, [search, isLoading, games]);
 
-  // PAGINATION LOGIC
   const totalPages = useMemo(() => {
     return filteredGames ? Math.ceil(filteredGames.length / gamesPerPage) : 0;
   }, [filteredGames]);
@@ -124,16 +123,49 @@ const GamesTable = ({
     return date.toLocaleString();
   };
 
+  const formatOdds = (odds: number) => {
+    if (oddsFormat === "american") {
+      if (odds >= 2) {
+        return `+${odds}`;
+      } else {
+        return odds;
+      }
+    }
+    return odds.toFixed(2);
+  };
+
   const handleSelectBet = (
     game: any,
     selection: string,
     odds: number,
     market: string,
-    point?: number
+    point: number | undefined,
+    bookmakerKey: string
   ) => {
-    // Check if bet already exists
-    if (bets.find((b) => b.id === game.id)) {
-      toast.error("You have already added this game to your bet slip.");
+    // Check for hedging within the same market
+    const conflictingBet = bets.find(
+      (b) =>
+        b.id === game.id &&
+        b.betDetails.market === market &&
+        b.team !== selection
+    );
+    if (conflictingBet) {
+      toast.error(
+        `Cannot add ${selection} (${market}) as it conflicts with an existing ${conflictingBet.team} (${market}) bet for this game.`
+      );
+      return;
+    }
+
+    // Check if the exact same bet exists
+    const existingBet = bets.find(
+      (b) =>
+        b.id === game.id &&
+        b.betDetails.market === market &&
+        b.team === selection &&
+        b.betDetails.bookmaker === bookmakerKey
+    );
+    if (existingBet) {
+      toast.error("This bet is already in your bet slip.");
       return;
     }
 
@@ -156,15 +188,18 @@ const GamesTable = ({
       sport: tab,
       league: sportKey,
       event: `${game.home_team} vs ${game.away_team}`,
-      market: market,
-      point: point,
+      betDetails: {
+        market: market,
+        point: point ?? null,
+        bookmaker: bookmakerKey,
+      },
     };
 
     addBet(bet);
-  };
-
-  const findTeamInBets = (team: string, id: number) => {
-    return bets.find((bet) => bet.team === team && bet.id === id);
+    setBookmakers((prev: any) => [
+      ...prev,
+      { eventId: game.id, bookmakerName: bookmakerKey },
+    ]);
   };
 
   const handleBookmakerChange = (gameId: string, bookmakerKey: string) => {
@@ -204,6 +239,25 @@ const GamesTable = ({
 
   return (
     <div className="space-y-4 p-4">
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          {lastUpdated && (
+            <p className="text-sm text-[#848BAC]">
+              Last updated: {lastUpdated.toLocaleTimeString()}
+            </p>
+          )}
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => refetch()}
+          disabled={isLoading}
+          className="flex items-center gap-1"
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+          Refresh
+        </Button>
+      </div>
       <div className="grid grid-cols-1 gap-4">
         {paginatedGames.map((game: any) => {
           const selectedBookmakerKey =
@@ -224,10 +278,10 @@ const GamesTable = ({
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-lg font-bold">
+                  <h3 className="text-lg font-bold text-vintage-50">
                     {game.home_team} vs {game.away_team}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#848BAC]">
                     {getStartTime(game.commence_time)} • {game.sport_title}
                   </p>
                 </div>
@@ -235,6 +289,7 @@ const GamesTable = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Badge variant="outline" className="cursor-help">
+                        <Info className="h-3 w-3 mr-1" />
                         {game.bookmakers?.length || 0} bookmakers
                       </Badge>
                     </TooltipTrigger>
@@ -246,7 +301,7 @@ const GamesTable = ({
               </div>
 
               {game.bookmakers?.length === 0 ? (
-                <p className="text-muted-foreground text-center py-4">
+                <p className="text-[#848BAC] text-center py-4">
                   No odds available for this game
                 </p>
               ) : (
@@ -270,15 +325,27 @@ const GamesTable = ({
 
                   {availableMarkets.length > 0 && (
                     <Tabs defaultValue={marketTypes[0] || "h2h"}>
-                      <TabsList className="mb-4">
+                      <TabsList className="mb-4 bg-[#F8F8F8]">
                         {marketTypes.includes("h2h") && (
-                          <TabsTrigger value="h2h">Moneyline</TabsTrigger>
+                          <TabsTrigger value="h2h" className="text-[#848BAC]">
+                            Moneyline
+                          </TabsTrigger>
                         )}
                         {marketTypes.includes("spreads") && (
-                          <TabsTrigger value="spreads">Spread</TabsTrigger>
+                          <TabsTrigger
+                            value="spreads"
+                            className="text-[#848BAC]"
+                          >
+                            Spread
+                          </TabsTrigger>
                         )}
                         {marketTypes.includes("totals") && (
-                          <TabsTrigger value="totals">Total</TabsTrigger>
+                          <TabsTrigger
+                            value="totals"
+                            className="text-[#848BAC]"
+                          >
+                            Total
+                          </TabsTrigger>
                         )}
                       </TabsList>
 
@@ -291,8 +358,13 @@ const GamesTable = ({
                                 <div
                                   key={outcome.name}
                                   className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
-                                    findTeamInBets(outcome.name, game.id)
-                                      ? "bg-blue-50 border-blue-200"
+                                    bets.find(
+                                      (b) =>
+                                        b.id === game.id &&
+                                        b.team === outcome.name &&
+                                        b.betDetails.market === "h2h"
+                                    )
+                                      ? "bg-[#0100821A] text-vintage-50"
                                       : "hover:bg-gray-50"
                                   }`}
                                   onClick={() =>
@@ -300,13 +372,15 @@ const GamesTable = ({
                                       game,
                                       outcome.name,
                                       outcome.price,
-                                      "h2h"
+                                      "h2h",
+                                      undefined,
+                                      selectedBookmakerKey
                                     )
                                   }
                                 >
                                   <p className="font-medium">{outcome.name}</p>
                                   <p className="text-2xl font-bold mt-2">
-                                    {outcome.price}
+                                    {formatOdds(outcome.price)}
                                   </p>
                                 </div>
                               ))}
@@ -323,8 +397,13 @@ const GamesTable = ({
                                 <div
                                   key={outcome.name}
                                   className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
-                                    findTeamInBets(outcome.name, game.id)
-                                      ? "bg-blue-50 border-blue-200"
+                                    bets.find(
+                                      (b) =>
+                                        b.id === game.id &&
+                                        b.team === outcome.name &&
+                                        b.betDetails.market === "spreads"
+                                    )
+                                      ? "bg-[#0100821A] text-vintage-50"
                                       : "hover:bg-gray-50"
                                   }`}
                                   onClick={() =>
@@ -333,19 +412,20 @@ const GamesTable = ({
                                       outcome.name,
                                       outcome.price,
                                       "spreads",
-                                      outcome.point
+                                      outcome.point,
+                                      selectedBookmakerKey
                                     )
                                   }
                                 >
                                   <p className="font-medium">{outcome.name}</p>
-                                  <p className="text-sm text-muted-foreground mb-1">
+                                  <p className="text-sm text-[#848BAC] mb-1">
                                     {outcome.point && outcome.point > 0
                                       ? "+"
                                       : ""}
                                     {outcome.point}
                                   </p>
                                   <p className="text-2xl font-bold">
-                                    {outcome.price}
+                                    {formatOdds(outcome.price)}
                                   </p>
                                 </div>
                               ))}
@@ -362,8 +442,13 @@ const GamesTable = ({
                                 <div
                                   key={outcome.name}
                                   className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
-                                    findTeamInBets(outcome.name, game.id)
-                                      ? "bg-blue-50 border-blue-200"
+                                    bets.find(
+                                      (b) =>
+                                        b.id === game.id &&
+                                        b.team === outcome.name &&
+                                        b.betDetails.market === "totals"
+                                    )
+                                      ? "bg-[#0100821A] text-vintage-50"
                                       : "hover:bg-gray-50"
                                   }`}
                                   onClick={() =>
@@ -372,16 +457,17 @@ const GamesTable = ({
                                       outcome.name,
                                       outcome.price,
                                       "totals",
-                                      outcome.point
+                                      outcome.point,
+                                      selectedBookmakerKey
                                     )
                                   }
                                 >
                                   <p className="font-medium">{outcome.name}</p>
-                                  <p className="text-sm text-muted-foreground mb-1">
+                                  <p className="text-sm text-[#848BAC] mb-1">
                                     {outcome.point}
                                   </p>
                                   <p className="text-2xl font-bold">
-                                    {outcome.price}
+                                    {formatOdds(outcome.price)}
                                   </p>
                                 </div>
                               ))}
@@ -397,7 +483,6 @@ const GamesTable = ({
         })}
       </div>
 
-      {/* PAGINATION CONTROLS */}
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-4 py-4">
           <Button

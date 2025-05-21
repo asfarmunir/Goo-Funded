@@ -112,6 +112,8 @@ model Account {
   totalFundedAmount Float     @default(0.0)
   fundedPayoutTimer DateTime?
 
+  isApproved Boolean @default(false)
+
   paymentMethod  String? // Store payment method details
   user           User?            @relation(fields: [userId], references: [id])
   billingAddress BillingAddress[]
@@ -197,6 +199,8 @@ model AccountInvoices {
   status        String?
   paymentMethod String?
   paymentDate   DateTime?
+  transactionId String?
+  paymentProof  String[]
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -239,13 +243,12 @@ model Bets {
   pick       Float
   winnings   Float
   oddsFormat OddsFormat
-
-  bets Json? // JSON field to store detailed bet information
+  betDetails Json[] // Array of JSON objects for market, point, bookmaker
 
   betStatus BetStatus
   betResult BetResult?
   betDate   DateTime
-  gameDate  DateTime[] // Array to accommodate multiple game dates
+  gameDate  DateTime[]
 
   user    User    @relation(fields: [userId], references: [id])
   account Account @relation(fields: [accountId], references: [id])

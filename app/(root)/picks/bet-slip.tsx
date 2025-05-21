@@ -1,5 +1,5 @@
-import Image from "next/image";
 import React from "react";
+import { Trash2 } from "lucide-react";
 
 interface Bet {
   id: number;
@@ -12,6 +12,12 @@ interface Bet {
   away_team: string;
   sport: string;
   event: string;
+  league: string;
+  betDetails: {
+    market: string;
+    point: number | null;
+    bookmaker: string;
+  };
 }
 
 const BetSlip = ({
@@ -20,82 +26,85 @@ const BetSlip = ({
   onPickInputChange,
 }: {
   bet: Bet;
-  removeBet: (id: number) => void;
+  removeBet: (id: number, market: string, bookmaker: string) => void;
   onPickInputChange: (
     e: React.ChangeEvent<HTMLInputElement>,
-    value: number
+    id: number,
+    market: string,
+    bookmaker: string
   ) => void;
 }) => {
-  const calculateMoneyLine = (
-    odds: number,
-    oddsFormat: "decimal" | "american",
-    pick: number
-  ) => {
-    let americanOdds = odds;
-    if (oddsFormat === "decimal") {
-      americanOdds = decimalToAmericanOdds(odds);
+  const formatOdds = (odds: number, oddsFormat: "decimal" | "american") => {
+    if (oddsFormat === "american") {
+      return odds > 0 ? `+${odds}` : odds;
     }
-    if (americanOdds > 0) {
-      return `+${(pick * (americanOdds / 100)).toFixed(2)}`;
-    } else {
-      return `-${(pick * (100 / Math.abs(americanOdds))).toFixed(2)}`;
+    return odds.toFixed(2);
+  };
+
+  const getMarketDisplay = (market: string) => {
+    switch (market) {
+      case "h2h":
+        return "Moneyline";
+      case "spreads":
+        return "Spread";
+      case "totals":
+        return "Total";
+      default:
+        return market;
     }
   };
 
-  const decimalToAmericanOdds = (decimalOdds: number) => {
-    if (decimalOdds >= 2) {
-      // Positive American odds
-      return (decimalOdds - 1) * 100;
-    } else {
-      // Negative American odds
-      return -100 / (decimalOdds - 1);
-    }
-  };
   return (
-    <div className="py-4">
-      <div className=" w-full mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <p className=" capitalize font-semibold text-base  ">
-            {bet.team}{" "}
-            <span className=" text-opacity-40 text-sm font-normal">
-              {"("}
-              {bet.oddsFormat}
-              {" format)"}
-            </span>
+    <div className="py-4 border-b border-gray-200">
+      <div className="w-full mb-4 flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <p className="capitalize font-semibold text-base text-vintage-50">
+            {bet.team} ({getMarketDisplay(bet.betDetails.market)})
+          </p>
+          <p className="text-xs text-[#848BAC]">
+            {bet.betDetails.point !== null
+              ? `${bet.betDetails.point > 0 ? "+" : ""}${bet.betDetails.point}`
+              : ""}
+            {bet.betDetails.point !== null ? " • " : ""}
+            {bet.betDetails.bookmaker}
+          </p>
+          <p className="text-sm text-vintage-50">
+            Odds: {formatOdds(bet.odds, bet.oddsFormat)}
           </p>
         </div>
-        <button onClick={() => removeBet(bet.id)}>
-          <Image
-            src="/icons/discard.png"
-            alt="Arrow Icon"
-            width={23}
-            height={23}
-          />
+        <button
+          onClick={() =>
+            removeBet(bet.id, bet.betDetails.market, bet.betDetails.bookmaker)
+          }
+          className="text-red-500 hover:text-red-700"
+        >
+          <Trash2 className="w-5 h-5" />
         </button>
-      </div>
-      <div className=" w-full mb-4  rounded-xl text-vintage-50 bg-[#0100821A] p-3 flex items-center justify-between">
-        <p className="text-sm  capitalize font-semibold">money line</p>
-        <p className="font-bold">
-          {calculateMoneyLine(bet.odds, bet.oddsFormat, bet.pick)}
-        </p>
       </div>
       <div className="w-full flex items-center gap-3">
         <div className="bg-[#F9F9F9] rounded-xl p-3.5 text-vintage-50 flex flex-col gap-2.5 flex-grow">
-          <p className=" text-xs font-thin ">Pick</p>
-          <div className="flex gap-2">
+          <p className="text-xs font-thin">Pick</p>
+          <div className="flex gap-2 items-center">
             <input
-              className=" font-bold bg-white focus:outline-none border border-transparent text-vintage-50 w-36 rounded-sm px-2"
-              // value={bet.pick.toFixed(2)}
+              className="font-bold bg-white focus:outline-none border border-transparent text-vintage-50 w-24 rounded-sm px-2"
               defaultValue={bet.pick.toFixed(2)}
-              onChange={(e) => onPickInputChange(e, bet.id)}
+              onChange={(e) =>
+                onPickInputChange(
+                  e,
+                  bet.id,
+                  bet.betDetails.market,
+                  bet.betDetails.bookmaker
+                )
+              }
               type="number"
+              step="0.01"
             />
             <p className="font-bold">$</p>
           </div>
         </div>
         <div className="bg-[#F9F9F9] rounded-xl p-3.5 text-vintage-50 flex flex-col gap-2.5 flex-grow">
-          <p className=" text-xs font-thin ">To Win</p>
-          <h2 className=" font-bold">{bet.toWin.toFixed(2)}$</h2>
+          <p className="text-xs font-thin">To Win</p>
+          <h2 className="font-bold">{bet.toWin.toFixed(2)}$</h2>
         </div>
       </div>
     </div>
