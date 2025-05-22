@@ -20,7 +20,7 @@ const client = mailgun.client({
 export const sendEmail = async (to:string, subject:string, text:string) => {
   try {
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to,
       subject,
       text,
@@ -36,7 +36,7 @@ export async function sendGreetingEmail(to: string, name: string,password:string
     try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to,
       subject: getSignupEmailTemplate(name,to,password).title,
       html: getSignupEmailTemplate(name,to,password).template,
@@ -56,7 +56,7 @@ export async function send2FACodeEmail(userEmail: string, code: string) {
     try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
      subject: "Your 2FA Code",
     text: `Your 2FA code is: ${code}. It is valid for 10 minutes.`,
@@ -80,7 +80,7 @@ export async function sendPasswordResetEmail(
      try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
         subject: getResetPasswordEmailTemplate(resetLink).title,
         text: `You requested a password reset. Click here to reset your password: ${resetLink}`,
@@ -104,7 +104,7 @@ export async function sendAffiliateSaleEmail(
       try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
     subject: getAffiliateSaleEmailTemplate(firstName, amount).title,
     text: `Congratulations! You've earned a commission of ${amount} from a referral.`,
@@ -130,7 +130,7 @@ export async function sendAccountBreachedEmail(
      try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
      subject: getBreachedEmailTemplate(userName, accountNumber).title,
     html: getAffiliateSaleEmailTemplate(userName, accountNumber).template,
@@ -174,13 +174,13 @@ export async function sendPhaseUpdateEmail(
          try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
     subject: subject,
     html: template,
    });
      await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
     subject: getPhaseCompleteEmailTemplate(userName, startingPhase-1, accountNumber).title,
     html: getPhaseCompleteEmailTemplate(userName, startingPhase-1, accountNumber).template,
@@ -201,7 +201,7 @@ export async function sendFundedAccountEmail(userEmail:string, userName: string,
        try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
     subject: getFundedEmailTemplate(userName, accountNumber).title,
     html: getFundedEmailTemplate(userName, accountNumber).template,
@@ -224,7 +224,7 @@ export async function sendKycVerifiedEmail (userEmail: string, userName: string)
         try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
    subject: getKycEmailTemplate(userName).title,
     html: getKycEmailTemplate(userName).template,
@@ -254,7 +254,7 @@ export async function sendPickResultEmail (userEmail: string, userName: string, 
       try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
       subject: title,
     html: template,
@@ -280,7 +280,7 @@ export async function sendAccountUnlockedEmail(userEmail: string) {
       try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
       subject: title,
     html: template,
@@ -306,7 +306,7 @@ export async function sendContractAwaitsEmail(userEmail: string, userName: strin
         try {
 
     const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-      from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      from: `goofunded<no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: userEmail,
       subject: title,
     html: template,

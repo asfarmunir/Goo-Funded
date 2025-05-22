@@ -493,38 +493,38 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
       <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="footer-background-outlook" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     
       
-      <div  class="footer-background" style="margin:0px auto;max-width:600px;">
-        
+      <div  style="background:#ffffff url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png') right top / contain no-repeat;background-position:right top;background-repeat:no-repeat;background-size:contain;margin:0px auto;border-radius:10px;max-width:600px;">
+        <div  style="line-height:0;font-size:0;">
         <table
-           align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;"
+           align="center" background="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png') right top / contain no-repeat;background-position:right top;background-repeat:no-repeat;background-size:contain;width:100%;border-radius:10px;"
         >
           <tbody>
             <tr>
               <td
-                 style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;"
+                 style="border:0px solid #000000;direction:ltr;font-size:0px;padding:2px;text-align:center;"
               >
                 <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><![endif]-->
                   
-      <div class="footer-boarder">
-          <!--[if mso | IE]><tr><td class="footer-icons-outlook" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="footer-icons-outlook" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+      <div style="padding:0px;border:2px solid #2160EB; border-radius: 10px;">
+          <!--[if mso | IE]><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:596px;" width="596" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     
       
-      <div  class="footer-icons" style="margin:0px auto;max-width:600px;">
+      <div  style="margin:0px auto;border-radius:10px 10px 0px 0px;max-width:596px;">
         
         <table
-           align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;"
+           align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;border-radius:10px 10px 0px 0px;"
         >
           <tbody>
             <tr>
               <td
-                 style="direction:ltr;font-size:0px;padding:40px 10px 10px 10px;text-align:center;"
+                 style="border:0px solid #000000;direction:ltr;font-size:0px;padding:0px;padding-bottom:0px;padding-top:50px;text-align:center;"
               >
-                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="width:580px;" ><![endif]-->
+                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="width:250px;" ><![endif]-->
             
       <div
-         class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;"
+         class="mj-column-px-250 mj-outlook-group-fix" style="font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;"
       >
-        <!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td style="vertical-align:top;width:116px;" ><![endif]-->
+        <!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td style="vertical-align:top;width:50px;" ><![endif]-->
                 
       <div
          class="mj-column-per-20 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:20%;"
@@ -537,7 +537,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
           
               <tr>
                 <td
-                   align="center" style="font-size:0px;padding:0px;word-break:break-word;"
+                   align="center" class="scl-icon" style="font-size:0px;padding:0px;word-break:break-word;"
                 >
                   
       <table
@@ -548,7 +548,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
             <td  style="width:38px;">
               
       <img
-         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731608062/Vantage/Html%20Email%20Images/discord_idon_gs2jdu.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
+         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747378552/email%20images/GooFunded/discord_p0cyjn.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
       />
     
             </td>
@@ -564,7 +564,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
     
       </div>
     
-              <!--[if mso | IE]></td><td style="vertical-align:top;width:116px;" ><![endif]-->
+              <!--[if mso | IE]></td><td style="vertical-align:top;width:50px;" ><![endif]-->
                 
       <div
          class="mj-column-per-20 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:20%;"
@@ -577,7 +577,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
           
               <tr>
                 <td
-                   align="center" style="font-size:0px;padding:0px;word-break:break-word;"
+                   align="center" class="scl-icon" style="font-size:0px;padding:0;word-break:break-word;"
                 >
                   
       <table
@@ -588,7 +588,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
             <td  style="width:38px;">
               
       <img
-         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731608060/Vantage/Html%20Email%20Images/insta_icon_vshcy4.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
+         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747378552/email%20images/GooFunded/insta_r24jay.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
       />
     
             </td>
@@ -604,7 +604,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
     
       </div>
     
-              <!--[if mso | IE]></td><td style="vertical-align:top;width:116px;" ><![endif]-->
+              <!--[if mso | IE]></td><td style="vertical-align:top;width:50px;" ><![endif]-->
                 
       <div
          class="mj-column-per-20 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:20%;"
@@ -617,7 +617,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
           
               <tr>
                 <td
-                   align="center" style="font-size:0px;padding:0px;word-break:break-word;"
+                   align="center" class="scl-icon" style="font-size:0px;padding:0;word-break:break-word;"
                 >
                   
       <table
@@ -628,7 +628,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
             <td  style="width:38px;">
               
       <img
-         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731608059/Vantage/Html%20Email%20Images/youtube_icon_klssnv.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
+         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747378551/email%20images/GooFunded/x_e3kezu.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
       />
     
             </td>
@@ -644,7 +644,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
     
       </div>
     
-              <!--[if mso | IE]></td><td style="vertical-align:top;width:116px;" ><![endif]-->
+              <!--[if mso | IE]></td><td style="vertical-align:top;width:50px;" ><![endif]-->
                 
       <div
          class="mj-column-per-20 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:20%;"
@@ -657,7 +657,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
           
               <tr>
                 <td
-                   align="center" style="font-size:0px;padding:0px;word-break:break-word;"
+                   align="center" class="scl-icon" style="font-size:0px;padding:0;word-break:break-word;"
                 >
                   
       <table
@@ -668,7 +668,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
             <td  style="width:38px;">
               
       <img
-         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731608058/Vantage/Html%20Email%20Images/twwter_x_icon_hkyu0w.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
+         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747378551/email%20images/GooFunded/yt_rtkmwe.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
       />
     
             </td>
@@ -684,7 +684,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
     
       </div>
     
-              <!--[if mso | IE]></td><td style="vertical-align:top;width:116px;" ><![endif]-->
+              <!--[if mso | IE]></td><td style="vertical-align:top;width:50px;" ><![endif]-->
                 
       <div
          class="mj-column-per-20 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:20%;"
@@ -697,7 +697,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
           
               <tr>
                 <td
-                   align="center" style="font-size:0px;padding:0px;word-break:break-word;"
+                   align="center" class="scl-icon" style="font-size:0px;padding:0;word-break:break-word;"
                 >
                   
       <table
@@ -708,7 +708,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
             <td  style="width:38px;">
               
       <img
-         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731608057/Vantage/Html%20Email%20Images/telegram_icon_cobzqx.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
+         height="auto" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747378551/email%20images/GooFunded/telegram_nmcgqz.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="38"
       />
     
             </td>
@@ -736,10 +736,10 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
       </div>
     
       
-      <!--[if mso | IE]></td></tr></table></td></tr><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+      <!--[if mso | IE]></td></tr></table></td></tr><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:596px;" width="596" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     
       
-      <div  style="margin:0px auto;max-width:600px;">
+      <div  style="margin:0px auto;max-width:596px;">
         
         <table
            align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;"
@@ -747,9 +747,9 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
           <tbody>
             <tr>
               <td
-                 style="direction:ltr;font-size:0px;padding:15px 15px 0px 15px;text-align:center;"
+                 style="direction:ltr;font-size:0px;padding:10px;padding-bottom:0px;text-align:center;"
               >
-                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:570px;" ><![endif]-->
+                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:576px;" ><![endif]-->
             
       <div
          class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;"
@@ -766,7 +766,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
                 >
                   
       <div
-         style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:12px;font-style:Poppins;font-weight:600;line-height:1;text-align:center;color:#000000;"
+         style="font-family:Poppins;font-size:12px;font-style:Poppins;font-weight:600;line-height:1;text-align:center;color:#000000;"
       >Contact</div>
     
                 </td>
@@ -786,10 +786,10 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
       </div>
     
       
-      <!--[if mso | IE]></td></tr></table></td></tr><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+      <!--[if mso | IE]></td></tr></table></td></tr><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:596px;" width="596" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     
       
-      <div  style="margin:0px auto;max-width:600px;">
+      <div  style="margin:0px auto;max-width:596px;">
         
         <table
            align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;"
@@ -799,7 +799,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
               <td
                  style="direction:ltr;font-size:0px;padding:0px;text-align:center;"
               >
-                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:596px;" ><![endif]-->
             
       <div
          class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;"
@@ -834,7 +834,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
                 <td  style="font-size:0;height:20px;vertical-align:middle;width:20px;">
                   
                     <img
-                       height="20" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731604551/Vantage/Html%20Email%20Images/email_icon_zjloh5.png" style="border-radius:3px;display:block;" width="20"
+                       height="20" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747377143/email%20images/GooFunded/contact_icon_hzab2r.png" style="border-radius:3px;display:block;" width="20"
                     />
                   
                 </td>
@@ -845,8 +845,8 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
         
           <td  style="vertical-align:middle;">
             <span
-                     style="color:#000000;font-size:13px;font-family:Ubuntu, Helvetica, Arial, sans-serif;line-height:22px;text-decoration:none;">
-              support@vantagepicks.com
+                     style="color:#000000;font-size:13px;font-family:Poppins;line-height:22px;text-decoration:none;">
+              <u>support@GooFunded.com</u>
             </span>
           </td>
           
@@ -874,10 +874,10 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
       </div>
     
       
-      <!--[if mso | IE]></td></tr></table></td></tr><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+      <!--[if mso | IE]></td></tr></table></td></tr><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:596px;" width="596" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     
       
-      <div  style="margin:0px auto;max-width:600px;">
+      <div  style="margin:0px auto;max-width:596px;">
         
         <table
            align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;"
@@ -885,23 +885,16 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
           <tbody>
             <tr>
               <td
-                 style="direction:ltr;font-size:0px;padding:10px 40px;text-align:center;"
+                 style="direction:ltr;font-size:0px;padding:20px;padding-bottom:0px;text-align:center;"
               >
-                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:520px;" ><![endif]-->
+                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:556px;" ><![endif]-->
             
       <div
          class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;"
       >
         
       <table
-         border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%"
-      >
-        <tbody>
-          <tr>
-            <td  style="background-color:#02316E;border-radius:10px;vertical-align:top;padding:0px;">
-              
-      <table
-         border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%"
+         border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#02316E;border-radius:20px;vertical-align:top;" width="100%"
       >
         <tbody>
           
@@ -911,17 +904,12 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
                 >
                   
       <div
-         style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:10px;line-height:1;text-align:center;color:#ffffff;"
-      >Disclaimer: The content and services provided by Vantage Picks are for educational and entertainment purposes only. We do not promote or facilitate real-money gambling. All activities on our platform are based on simulated data, and no real financial risk is involved. Users are responsible for ensuring compliance with local laws and regulations regarding sports betting and gambling. Contact support@vantagepicks.com for more information.</div>
+         style="font-family:Poppins;font-size:10px;line-height:1.5;text-align:center;color:#ffffff;"
+      ><b>Disclaimer:</b> The content and services provided by <b>GooFunded</b> are for educational and entertainment purposes only. We do not promote or facilitate real-money gambling. All activities on our platform are based on simulated data, and no real financial risk is involved. Users are responsible for ensuring compliance with local laws and regulations regarding sports betting and gambling. <b>Contact support@GooFunded.com for more information.</b></div>
     
                 </td>
               </tr>
             
-        </tbody>
-      </table>
-    
-            </td>
-          </tr>
         </tbody>
       </table>
     
@@ -936,10 +924,10 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
       </div>
     
       
-      <!--[if mso | IE]></td></tr></table></td></tr><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+      <!--[if mso | IE]></td></tr></table></td></tr><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:596px;" width="596" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     
       
-      <div  style="margin:0px auto;max-width:600px;">
+      <div  style="margin:0px auto;max-width:596px;">
         
         <table
            align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;"
@@ -947,9 +935,9 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
           <tbody>
             <tr>
               <td
-                 style="direction:ltr;font-size:0px;padding:15px 15px 20px 15px;text-align:center;"
+                 style="direction:ltr;font-size:0px;padding:20px 0;padding-top:1px;text-align:center;"
               >
-                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:570px;" ><![endif]-->
+                <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:596px;" ><![endif]-->
             
       <div
          class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;"
@@ -962,12 +950,12 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
           
               <tr>
                 <td
-                   align="center" style="font-size:0px;padding:0px 4px;word-break:break-word;"
+                   align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;"
                 >
                   
       <div
-         style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:10px;font-style:Poppins;font-weight:400;line-height:1;text-align:center;color:#000000;"
-      >© 2024 VantagePicks all rights reserved.</div>
+         style="font-family:Poppins;font-size:12px;font-weight:400;line-height:25px;text-align:center;color:#121212;"
+      ><u>© 2024 GooFunded all rights reserved.</u></div>
     
                 </td>
               </tr>
@@ -994,7 +982,7 @@ Welcome to the team, and we wish <span style="color:#2160EB;">you success</span>
             </tr>
           </tbody>
         </table>
-        
+        </div>
       </div>
     
       
