@@ -155,10 +155,9 @@ export const getBreachedEmailTemplate = (
       
       <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><v:rect style="width:600px;" xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false"><v:fill origin="0, -0.5" position="0, -0.5" src="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731614715/Vantage/Html%20Email%20Images/hero%20image/Breach_Detected_lihus5.png" type="frame" size="1,1" aspect="atmost" /><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><![endif]-->
           
-      <div  style="background:url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731614715/Vantage/Html%20Email%20Images/hero%20image/Breach_Detected_lihus5.png') center top / contain no-repeat;background-position:center top;background-repeat:no-repeat;background-size:contain;margin:0px auto;max-width:600px;">
+      <div  style="background:url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747401677/email%20images/GooFunded/Breach_Detected_e89fos.png') center top / contain no-repeat;background-position:center top;background-repeat:no-repeat;background-size:contain;margin:0px auto;max-width:600px;">
         <div  style="line-height:0;font-size:0;">
         <table
-           align="center" background="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731614715/Vantage/Html%20Email%20Images/hero%20image/Breach_Detected_lihus5.png" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1731614715/Vantage/Html%20Email%20Images/hero%20image/Breach_Detected_lihus5.png') center top / contain no-repeat;background-position:center top;background-repeat:no-repeat;background-size:contain;width:100%;"
         >
           <tbody>
             <tr>
@@ -331,7 +330,7 @@ for 25% off</div>
       <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="footer-background-outlook" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     
       
-      <div  style="background:#ffffff url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png') right top / contain no-repeat;background-position:right top;background-repeat:no-repeat;background-size:contain;margin:0px auto;border-radius:10px;max-width:600px;">
+         <div  style="background:#ffffff url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png') right top / contain no-repeat;background-position:right top;background-repeat:no-repeat;background-size:contain;margin:0px auto;border-radius:10px;max-width:600px;">
         <div  style="line-height:0;font-size:0;">
         <table
            align="center" background="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png') right top / contain no-repeat;background-position:right top;background-repeat:no-repeat;background-size:contain;width:100%;border-radius:10px;"
@@ -822,7 +821,6 @@ for 25% off</div>
         </table>
         </div>
       </div>
-    
       
       <!--[if mso | IE]></td></tr></table><![endif]-->
     
@@ -1289,7 +1287,7 @@ and KYC process shortly. </br><span style="color:#2160EB;">This shouldn't take m
       <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="footer-background-outlook" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     
       
-      <div  style="background:#ffffff url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png') right top / contain no-repeat;background-position:right top;background-repeat:no-repeat;background-size:contain;margin:0px auto;border-radius:10px;max-width:600px;">
+         <div  style="background:#ffffff url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png') right top / contain no-repeat;background-position:right top;background-repeat:no-repeat;background-size:contain;margin:0px auto;border-radius:10px;max-width:600px;">
         <div  style="line-height:0;font-size:0;">
         <table
            align="center" background="https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff url('https://res.cloudinary.com/unionwealthmanagement/image/upload/v1747396172/email%20images/GooFunded/Background_footer_o9sn1r.png') right top / contain no-repeat;background-position:right top;background-repeat:no-repeat;background-size:contain;width:100%;border-radius:10px;"
@@ -1780,7 +1778,6 @@ and KYC process shortly. </br><span style="color:#2160EB;">This shouldn't take m
         </table>
         </div>
       </div>
-    
       
       <!--[if mso | IE]></td></tr></table><![endif]-->
     
