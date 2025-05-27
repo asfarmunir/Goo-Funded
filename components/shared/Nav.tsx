@@ -37,6 +37,7 @@ import {
 import { HiMenu } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { FaUser } from "react-icons/fa6";
+import logo from "@/public/goFunded/logoIcon.png";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -118,13 +119,7 @@ const Sidebar = () => {
           flex items-center justify-between  gap-7 2xl:gap-10 p-3 md:p-4 2xl:p-6`}
       >
         <div className="flex items-center gap-5 2xl:gap-8">
-          <Image
-            src={"/goFunded/logoIcon.png"}
-            alt="logo"
-            width={50}
-            height={50}
-            priority
-          />
+          <Image src={logo} alt="logo" width={50} height={50} priority />
 
           <div className="hidden md:flex  gap-1.5">
             {navlinks.map((link, index) => (

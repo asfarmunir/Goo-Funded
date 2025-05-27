@@ -12,7 +12,7 @@ import { userStore } from "../store/user";
 import { Account } from "@prisma/client";
 import CreateAccountModal from "@/components/shared/CreateAccountModal";
 import Intercom from "@intercom/messenger-js-sdk";
-
+import logo from "@/public/goFunded/logo.png";
 import Nav from "@/components/shared/Nav";
 const layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -92,13 +92,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
         )}
         {status === "loading" && (
           <div className=" w-full flex items-center animate-pulse flex-col justify-center gap-3 h-screen">
-            <Image
-              src={"/goFunded/logo.png"}
-              alt="logo"
-              width={200}
-              height={150}
-              priority
-            />
+            <Image src={logo} alt="logo" width={200} height={150} priority />
             <p className=" text-[1.1rem]  text-vintage-50 font-semibold ">
               Lets Place Some Picks{" "}
             </p>
