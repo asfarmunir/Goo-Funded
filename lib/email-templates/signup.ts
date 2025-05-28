@@ -1,5 +1,5 @@
 export const getSignupEmailTemplate = (name: string,email:string,password:string) => {
-  const SIGNUP_TITLE = "Welcome to the Vantage Picks!";
+  const SIGNUP_TITLE = "Welcome to the Goo Funded!";
   const SIGNUP_TEMPLATE = (`
  <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">

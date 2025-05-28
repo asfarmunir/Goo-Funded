@@ -1,5 +1,5 @@
 export const getKycEmailTemplate = (name: string) => {
-  const KYC_TITLE = "Welcome to the Vantage Picks!";
+  const KYC_TITLE = "Welcome to the Goo Funded!";
   const KYC_TEMPLATE = (`
     <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">

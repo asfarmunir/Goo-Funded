@@ -577,9 +577,9 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                         )}
                       />
                       <p className="text-xs  2xl:text-sm text-[#848BAC]  pl- font-medium  peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        By providing your information, you allow Vantage Pikcs
-                        to charge your card for future payments in accordance
-                        with their terms.
+                        By providing your information, you allow Goo Funded to
+                        charge your card for future payments in accordance with
+                        their terms.
                       </p>
 
                       <div className="flex w-full border-t flex-wrap sm:flex-nowrap mb-4  mt-6 gap-2 items-center justify-center">

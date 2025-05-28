@@ -8,7 +8,7 @@ export const getWelcomePhase1EmailTemplate = (name: string) => {
 }
 
 export const getWelcomePhase2EmailTemplate = (name: string) => {
-    const WELCOME_PHASE2_TITLE = "Welcome to the Vantage Picks!";
+    const WELCOME_PHASE2_TITLE = "Welcome to the Goo Funded!";
     const WELCOME_PHASE2_TEMPLATE = (`
       <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -1080,7 +1080,7 @@ Live Support</div>
 }
 
 export const getWelcomePhase3EmailTemplate = (name: string) => {
-    const WELCOME_PHASE3_TITLE = "Welcome to the Vantage Picks!";
+    const WELCOME_PHASE3_TITLE = "Welcome to the Goo Funded!";
     const WELCOME_PHASE3_TEMPLATE = (`
       <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
