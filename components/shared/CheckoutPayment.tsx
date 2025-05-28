@@ -186,8 +186,8 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
           accountType === "2"
             ? "TWO_STEP"
             : accountType === "3"
-            ? "THREE_STEP"
-            : "",
+              ? "THREE_STEP"
+              : "",
         status: "CHALLENGE",
         accountPrice: accountPrice,
       },
@@ -255,8 +255,8 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
           accountType === "2"
             ? "TWO_STEP"
             : accountType === "3"
-            ? "THREE_STEP"
-            : "",
+              ? "THREE_STEP"
+              : "",
         status: "CHALLENGE",
         accountPrice: accountPrice,
       },
@@ -265,7 +265,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
       cardCode: values?.cardSecurityCode,
       expirationDate: values?.expirationDate,
       email: session?.user?.email,
-      userId: session?.user ? session?.user.id ?? "" : "",
+      userId: session?.user ? (session?.user.id ?? "") : "",
     };
 
     // submit to api
@@ -339,8 +339,8 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
           accountType === "2"
             ? "TWO_STEP"
             : accountType === "3"
-            ? "THREE_STEP"
-            : "",
+              ? "THREE_STEP"
+              : "",
         status: "CHALLENGE",
         accountPrice: accountPrice,
       },
@@ -349,10 +349,10 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
       transactionId: values.transactionId,
       paymentProof: values.paymentProof,
       email: session?.user?.email,
-      userId: session?.user ? session?.user.id ?? "" : "",
+      userId: session?.user ? (session?.user.id ?? "") : "",
     };
 
-    // submit to api
+    // I used the previous credit card setup here, i requests call to the /person-to-person route.
     createCreditInvoice(data);
   }
 
@@ -381,7 +381,8 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                       Billing Details
                     </h2>
                     <p className=" text-[#848BAC] -mt-2  ">
-                      Get funded and earn up to 70% of your trading profits.{" "}
+                      Get funded and earn up to 70% of your trading
+                      profits.{" "}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 w-full md:w-fit ">

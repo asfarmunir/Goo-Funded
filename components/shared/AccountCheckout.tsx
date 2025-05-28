@@ -404,7 +404,7 @@ const AccountCheckout: React.FC<AccountCheckoutProps> = ({
                       {activeAccountSize.price}.00
                     </p>
                   </div>
-                  <div className=" w-full p-5 bg-[#428BC1]  rounded-3xl">
+                  {/* <div className=" w-full p-5 bg-[#428BC1]  rounded-3xl">
                     <p className="text-white  text-lg text-center border-b pb-1.5 mb-3 w-full font-semibold">
                       Coupon Code
                     </p>
@@ -427,14 +427,14 @@ const AccountCheckout: React.FC<AccountCheckoutProps> = ({
                         Apply
                       </button>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
               <div className="flex justify-end">
                 <button
                   onClick={openForm}
-                  className="  bg-vintage-50 text-center  rounded-full hover:bg-slate-700 mt-4 text-white font-semibold py-4 px-10 2xl:text-base   focus:outline-none focus:shadow-outline"
+                  className="  bg-vintage-50 text-center  rounded-full w-full hover:bg-slate-700 mt-4 text-white font-semibold py-4 px-10 2xl:text-base   focus:outline-none focus:shadow-outline"
                 >
                   Get Started Now
                 </button>

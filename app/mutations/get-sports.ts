@@ -3,5 +3,7 @@ export const getSports = async () => {
     if (!response.ok) {
         throw new Error("Failed to fetch sports");  
     }
+
     return response.json();
+
 }

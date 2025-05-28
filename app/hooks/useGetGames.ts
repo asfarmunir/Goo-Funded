@@ -7,7 +7,7 @@ interface GetGamesParams {
 }
 
 export const useGetGames = ({
-  sportKey = "americanfootball_nfl",
+  sportKey = "soccer_uefa_champs_league",
   oddsFormat = "american",
 }: GetGamesParams) => {
   return useQuery({

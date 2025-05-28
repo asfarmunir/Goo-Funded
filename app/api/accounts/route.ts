@@ -24,7 +24,8 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     
     const accounts = await prisma.account.findMany({
       where: {
-        userId: user?.id
+        userId: user?.id,
+        isApproved: true
       }
     });
     return NextResponse.json(accounts, { status: 200 });

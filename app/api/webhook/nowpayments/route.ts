@@ -113,6 +113,7 @@ export async function POST(req: NextRequest) {
                 userId: accountDetails.userId,
                 minBetPeriod: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
                 maxBetPeriod: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
+                isApproved: true, 
             },
             });
 

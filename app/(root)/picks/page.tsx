@@ -1,8 +1,6 @@
 "use client";
 import { useCreateBet } from "@/app/hooks/useCreateBet";
 import { useGetSports } from "@/app/hooks/useGetSports";
-import BetModal from "@/components/shared/BetModal";
-import Navbar from "@/components/shared/Navbar";
 import UserAccount from "@/components/shared/UserAccount";
 import {
   DropdownMenu,
@@ -18,7 +16,6 @@ import { FaAngleDown } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
 import { TiArrowLeft, TiArrowRight } from "react-icons/ti";
 import BetSlip from "./bet-slip";
-import GamesTable from "./games";
 import {
   americanToDecimalOdds,
   calculateToWin,
@@ -28,6 +25,7 @@ import { accountStore } from "@/app/store/account";
 import { ALL_STEP_CHALLENGES } from "@/lib/constants";
 import Parlay from "./parlay";
 import { ChevronDown } from "lucide-react";
+import GamesTable from "./games";
 
 type oddsType = "american" | "decimal";
 
@@ -47,6 +45,7 @@ interface Bet {
   betDetails: {
     market: string;
     point: number | null;
+    description?: string;
     bookmaker: string;
   };
 }
@@ -70,6 +69,7 @@ const Page = () => {
 
   // SPORTS DATA
   const { data, isPending, isError } = useGetSports();
+  console.log("🚀 ~ Page ~ data:", data);
 
   // ACCOUNT
   const account = accountStore((state) => state.account);
@@ -413,18 +413,18 @@ const Page = () => {
             </div>
             <div className="flex w-full md:w-fit items-center gap-2 flex-col md:flex-row">
               <button
-                className={`flex justify-center items-center p-4 text-sm w-full md:w-fit 2xl:text-base bg-vintage-50 text-white rounded-full ${
+                className={`flex cursor-default justify-center items-center p-4 text-sm w-full md:w-fit 2xl:text-base bg-vintage-50 text-white rounded-full ${
                   findTeamInBets(featuredMatch?.home_team, featuredMatch?.id)
                     ? "shadow shadow-blue-800"
                     : ""
                 }`}
-                onClick={() =>
-                  addGameToBetSlip({ game: featuredMatch, home: true })
-                }
+                // onClick={() =>
+                //   addGameToBetSlip({ game: featuredMatch, home: true })
+                // }
               >
                 {featuredMatch?.home_team}
               </button>
-              <p className="p-1.5 text-sm px-2 rounded-full font-bold -mx-3 -my-4 z-30 text-vintage-50 bg-blue-900/30 border-blue-900/40 border-2">
+              <p className="p-1.5 cursor-default text-sm px-2 rounded-full font-bold -mx-3 -my-4 z-30 text-vintage-50 bg-blue-900/30 border-blue-900/40 border-2">
                 vs
               </p>
               <button
@@ -433,20 +433,20 @@ const Page = () => {
                     ? "shadow shadow-blue-800"
                     : ""
                 }`}
-                onClick={() =>
-                  addGameToBetSlip({ game: featuredMatch, home: false })
-                }
+                // onClick={() =>
+                //   addGameToBetSlip({ game: featuredMatch, home: false })
+                // }
               >
                 {featuredMatch?.away_team}
               </button>
-              <button
+              {/* <button
                 className="flex justify-center border-4 border-vintage-50 items-center gap-2 p-4 px-8 text-sm w-full md:w-fit 2xl:text-base font-black bg-white rounded-full"
                 onClick={() =>
                   addGameToBetSlip({ game: featuredMatch, home: true })
                 }
               >
                 Bet Now
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="w-full transition-all border border-gray-200 rounded-xl bg-[#F8F8F8] flex flex-col">
@@ -649,14 +649,14 @@ const LeaguesTabs = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center justify-center p-3.5 px-5 2xl:px-8 gap-4 bg-white rounded-full">
+          <button className="flex items-center justify-center p-3.5 px-5 2xl:px-8 gap-4 bg-white  rounded-full">
             <p className="text-xs 2xl:text-sm font-bold">
               {leagues?.find((league: any) => league.key === leagueTab)?.title}
             </p>
             <ChevronDown />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className=" max-h-96 overflow-y-auto">
           {leagues?.map((league: any, index: number) =>
             (league.title as string).toLowerCase().includes("winner") ? null : (
               <DropdownMenuItem

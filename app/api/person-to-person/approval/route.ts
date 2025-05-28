@@ -21,10 +21,6 @@ export async function POST(req: NextRequest) {
 
     const { account, accountInvoice,email} = await req.json();
     console.log("🚀 ~ email:", email)
-    // return NextResponse.json({
-    //     success: true,
-    //     message: "Transaction Approved",
-    //   }); 
   if (req.method !== "POST") {
     return NextResponse.json(
       { message: "Method Not Allowed" },
@@ -81,11 +77,14 @@ export async function POST(req: NextRequest) {
               }
 
 
+      await sendNotification("Payment Approved! Your account is active now!", "UPDATE", user.id);
+
       const numberOfAccounts = await prisma.account.count({
         where: {
           userId: user.id,
         },
       });
+
 
       if (numberOfAccounts > 1) {
 

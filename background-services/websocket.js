@@ -94,9 +94,7 @@ async function handleWin(bet, account) {
   await sendAppNotification(
     bet.userId,
     "ALERT",
-    `Congratulations! You won $${
-      Number(bet.winnings.toFixed(2))
-    } Pick.`
+    `Congratulations! You won $${Number(bet.winnings.toFixed(2))} Pick.`
   );
   await sendPickResultEmail(bet.accountId, "WIN");
 
@@ -169,7 +167,7 @@ async function handleLoss(bet, account) {
     data: {
       totalLoss: { increment: bet.pick },
       dailyLoss: { increment: bet.pick },
-      // yha pr issue hain
+       // yha pr issue hain
       totalFundedAmount: {
         decrement: account.status === "FUNDED" ? bet.pick : 0,
       },
@@ -212,7 +210,7 @@ async function handleLoss(bet, account) {
   }
 }
 
-// Function to evaluate game outcome for Moneyline, Spreads, and Totals
+// Function to evaluate game outcome for all markets
 function evaluateGameOutcome(game) {
   if (!game.completed || !game.scores || game.scores.length !== 2) {
     return null;
@@ -229,7 +227,13 @@ function evaluateGameOutcome(game) {
   const awayScore = Number(awayTeam.score);
 
   // Determine winner for Moneyline (h2h)
-  const winner = homeScore > awayScore ? homeTeam.name : awayTeam.name;
+  const winner = homeScore > awayScore ? homeTeam.name : awayScore > homeScore ? awayTeam.name : null;
+
+  // Check if game is a draw
+  const isDraw = homeScore === awayScore;
+
+  // Check if both teams scored
+  const bothTeamsScored = homeScore > 0 && awayScore > 0;
 
   // Calculate total points for Totals
   const totalPoints = homeScore + awayScore;
@@ -240,10 +244,14 @@ function evaluateGameOutcome(game) {
   return {
     eventId: game.id,
     winner,
+    isDraw,
+    bothTeamsScored,
     totalPoints,
     pointDifferential,
     homeTeam: homeTeam.name,
     awayTeam: awayTeam.name,
+    homeTeamScore: homeScore,
+    awayTeamScore: awayScore,
   };
 }
 
@@ -346,6 +354,7 @@ async function checkForUpdates(wss) {
         const team = bet.team[i];
         const market = bet.betDetails[i].market;
         const point = bet.betDetails[i].point;
+        const description = bet.betDetails[i].description;
         const outcome = outcomes.find((o) => o.eventId === eventId);
 
         if (!outcome) {
@@ -354,14 +363,14 @@ async function checkForUpdates(wss) {
         }
 
         if (market === "h2h") {
-          // Moneyline: Check if selected team is the winner
+          // Moneyline: Win if selected team is the winner
           if (team === outcome.winner) {
             legResults.push("WIN");
           } else {
             legResults.push("LOSE");
           }
         } else if (market === "spreads") {
-          // Spreads: Check if selected team covers the spread
+          // Spreads: Win if selected team covers the spread
           const selectedTeamIsHome = team === outcome.homeTeam;
           const spread = point || 0;
           const adjustedDifferential = selectedTeamIsHome
@@ -376,11 +385,54 @@ async function checkForUpdates(wss) {
             legResults.push("LOSE");
           }
         } else if (market === "totals") {
-          // Totals: Check if total points are over/under the point
+          // Totals: Win if total points are over/under the point
           const totalPoint = point || 0;
           if (outcome.totalPoints > totalPoint) {
             legResults.push(team === "Over" ? "WIN" : "LOSE");
           } else if (outcome.totalPoints < totalPoint) {
+            legResults.push(team === "Under" ? "WIN" : "LOSE");
+          } else {
+            legResults.push("PUSH");
+          }
+        } else if (market === "btts") {
+          // Both Teams to Score: Win if both teams scored (Yes) or neither/both didn't (No)
+          if (team === "Yes" && outcome.bothTeamsScored) {
+            legResults.push("WIN");
+          } else if (team === "No" && !outcome.bothTeamsScored) {
+            legResults.push("WIN");
+          } else {
+            legResults.push("LOSE");
+          }
+        } else if (market === "draw_no_bet") {
+          // Draw No Bet: Win if selected team wins, push if draw
+          if (outcome.isDraw) {
+            legResults.push("PUSH");
+          } else if (team === outcome.winner) {
+            legResults.push("WIN");
+          } else {
+            legResults.push("LOSE");
+          }
+        } else if (market === "h2h_3_way") {
+          // 3-Way Moneyline: Win if selected outcome (home/away/draw) matches
+          if (outcome.isDraw && team === "Draw") {
+            legResults.push("WIN");
+          } else if (team === outcome.winner) {
+            legResults.push("WIN");
+          } else {
+            legResults.push("LOSE");
+          }
+        } else if (market === "team_totals" || market === "alternate_team_totals") {
+          // Team Totals/Alternate Team Totals: Win if selected team's score is over/under the point
+          const selectedTeam = description || team; // Use description for alternate_team_totals
+          const teamScore =
+            selectedTeam === outcome.homeTeam
+              ? outcome.homeTeamScore
+              : outcome.awayTeamScore;
+          const totalPoint = point || 0;
+
+          if (teamScore > totalPoint) {
+            legResults.push(team === "Over" ? "WIN" : "LOSE");
+          } else if (teamScore < totalPoint) {
             legResults.push(team === "Under" ? "WIN" : "LOSE");
           } else {
             legResults.push("PUSH");
@@ -410,7 +462,6 @@ async function checkForUpdates(wss) {
         } else {
           betResult = "WIN";
           // Adjust winnings (simplified: assume odds provided are correct)
-          // In practice, you may need to fetch individual leg odds
         }
       } else {
         betResult = "WIN";

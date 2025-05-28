@@ -17,7 +17,6 @@ import React, { useMemo } from "react";
 import { useGetAccounts } from "../hooks/useGetAccounts";
 import { accountStore } from "../store/account";
 import { ChevronDown } from "lucide-react";
-import AccountCheckout from "@/components/shared/AccountCheckout";
 
 type accountTypes = "CHALLENGE" | "FUNDED" | "BREACHED";
 type sortFilterType = "ALL" | "FUNDED" | "BREACHED" | "CHALLENGE";
@@ -98,7 +97,9 @@ const page = () => {
                   width={13}
                   height={13}
                 />
-                <span className=" font-semibold text-white">How it works</span>{" "}
+                <span className=" font-semibold text-white">
+                  How it works
+                </span>{" "}
               </DialogTrigger>
               <DialogContent className=" bg-white gap-1 py-12  border-none md:min-w-[700px] 2xl:min-w-[900px] flex flex-col items-center">
                 <h2 className=" text-3xl font-bold">How It Works</h2>
@@ -156,7 +157,9 @@ const page = () => {
                   width={13}
                   height={13}
                 />
-                <span className=" font-semibold text-white">How it works</span>{" "}
+                <span className=" font-semibold text-white">
+                  How it works
+                </span>{" "}
               </DialogTrigger>
               <DialogContent className=" bg-white gap-1 py-12  border-none md:min-w-[700px] 2xl:min-w-[900px] flex flex-col items-center">
                 <h2 className=" text-3xl font-bold">How It Works</h2>
@@ -306,8 +309,8 @@ const page = () => {
                     account.status === "FUNDED"
                       ? "  bg-[#0F840C1F] text-green-700 border border-[#0F840C3D] "
                       : account.status === "BREACHED"
-                      ? " bg-[#FF00001F] text-[#ff0000cf] border border-[#FF00003D] "
-                      : " bg-[#C02FF51F] text-[#c02ff5ad] border border-[#C02FF53D]  "
+                        ? " bg-[#FF00001F] text-[#ff0000cf] border border-[#FF00003D] "
+                        : " bg-[#C02FF51F] text-[#c02ff5ad] border border-[#C02FF53D]  "
                   }
              
               `}

@@ -1,8 +1,7 @@
 "use client";
-import { useGetGames } from "@/app/hooks/useGetGames";
 import { ALL_STEP_CHALLENGES } from "@/lib/constants";
 import { americanToDecimalOdds, getOriginalAccountValue } from "@/lib/utils";
-import { LoaderCircle, RefreshCw, Info } from "lucide-react";
+import { LoaderCircle, RefreshCw, Info, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +13,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerFooter,
+  DrawerClose,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { useQuery } from "@tanstack/react-query";
+import { getEventOdds } from "@/app/mutations/get-event-odd";
+import { useGetGames } from "@/app/hooks/useGetGames";
 
 interface GetGamesParams {
   sportKey: string;
@@ -45,9 +56,23 @@ interface Bet {
   betDetails: {
     market: string;
     point: number | null;
+    description?: string;
     bookmaker: string;
   };
 }
+
+const marketLabels: Record<string, string> = {
+  h2h: "Moneyline",
+  spreads: "Spread",
+  totals: "Total",
+  btts: "Both Teams to Score",
+  draw_no_bet: "Draw No Bet",
+  h2h_3_way: "3-Way Moneyline",
+  team_totals: "Team Totals",
+  alternate_team_totals: "Alternate Team Totals",
+  h2h_q1: "1st Quarter Moneyline",
+  player_assists: "Player Assists",
+};
 
 const GamesTable = ({
   sportKey,
@@ -76,7 +101,16 @@ const GamesTable = ({
     Record<string, string>
   >({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [openDrawerGameId, setOpenDrawerGameId] = useState<string | null>(null);
   const gamesPerPage = 10;
+
+  const { data: eventOdds, isLoading: isEventOddsLoading } = useQuery({
+    queryKey: ["eventOdds", openDrawerGameId, sportKey, oddsFormat],
+    queryFn: () =>
+      getEventOdds({ sportKey, eventId: openDrawerGameId!, oddsFormat }),
+    enabled: !!openDrawerGameId,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
 
   useEffect(() => {
     refetch();
@@ -125,11 +159,7 @@ const GamesTable = ({
 
   const formatOdds = (odds: number) => {
     if (oddsFormat === "american") {
-      if (odds >= 2) {
-        return `+${odds}`;
-      } else {
-        return odds;
-      }
+      return odds >= 2 ? `+${odds}` : odds;
     }
     return odds.toFixed(2);
   };
@@ -140,28 +170,29 @@ const GamesTable = ({
     odds: number,
     market: string,
     point: number | undefined,
+    description: string | undefined,
     bookmakerKey: string
   ) => {
-    // Check for hedging within the same market
     const conflictingBet = bets.find(
       (b) =>
         b.id === game.id &&
         b.betDetails.market === market &&
-        b.team !== selection
+        b.team !== selection &&
+        b.betDetails.description === description
     );
     if (conflictingBet) {
       toast.error(
-        `Cannot add ${selection} (${market}) as it conflicts with an existing ${conflictingBet.team} (${market}) bet for this game.`
+        `Cannot add ${selection} (${marketLabels[market]}) as it conflicts with an existing ${conflictingBet.team} (${marketLabels[market]}) bet for this game.`
       );
       return;
     }
 
-    // Check if the exact same bet exists
     const existingBet = bets.find(
       (b) =>
         b.id === game.id &&
         b.betDetails.market === market &&
         b.team === selection &&
+        b.betDetails.description === description &&
         b.betDetails.bookmaker === bookmakerKey
     );
     if (existingBet) {
@@ -189,8 +220,9 @@ const GamesTable = ({
       league: sportKey,
       event: `${game.home_team} vs ${game.away_team}`,
       betDetails: {
-        market: market,
+        market,
         point: point ?? null,
+        description,
         bookmaker: bookmakerKey,
       },
     };
@@ -321,20 +353,130 @@ const GamesTable = ({
                         {bm.title}
                       </Badge>
                     ))}
+                    <Drawer>
+                      <DrawerTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center rounded-full text-white gap-1 bg-vintage-50 hover:bg-gray-100"
+                          onClick={() => setOpenDrawerGameId(game.id)}
+                        >
+                          Show More Markets <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </DrawerTrigger>
+                      <DrawerContent className="bg-white rounded-t-lg">
+                        <DrawerHeader>
+                          <DrawerTitle className="text-vintage-50 text-lg font-bold">
+                            {game.home_team} vs {game.away_team}
+                          </DrawerTitle>
+                          <p className="text-sm text-[#848BAC]">
+                            {getStartTime(game.commence_time)} •{" "}
+                            {game.sport_title}
+                          </p>
+                        </DrawerHeader>
+                        {isEventOddsLoading ? (
+                          <div className="text-center py-12">
+                            <LoaderCircle className="animate-spin text-[#848BAC]" />
+                            <p className="text-[#848BAC]">Loading markets...</p>
+                          </div>
+                        ) : !eventOdds || eventOdds.id !== game.id ? (
+                          <p className="text-center py-4 text-[#848BAC]">
+                            No additional markets available
+                          </p>
+                        ) : (
+                          <div className="px-6 pb-6 overflow-y-auto max-h-[70vh]">
+                            {eventOdds.bookmakers.map((bm: any) => (
+                              <div key={bm.key} className="mb-6">
+                                <h4 className="font-semibold text-vintage-50 mb-2">
+                                  {bm.title}
+                                </h4>
+                                {bm.markets.map((market: any) => (
+                                  <div key={market.key} className="mb-4">
+                                    <h5 className="font-medium text-[#848BAC] uppercase text-sm mb-2">
+                                      {marketLabels[market.key] || market.key}
+                                    </h5>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                      {market.outcomes.map((outcome: any) => (
+                                        <div
+                                          key={`${outcome.name}-${outcome.description || outcome.point}`}
+                                          className={`border rounded-lg p-2 text-center cursor-pointer transition-colors ${
+                                            bets.find(
+                                              (b) =>
+                                                b.id === game.id &&
+                                                b.team === outcome.name &&
+                                                b.betDetails.market ===
+                                                  market.key &&
+                                                b.betDetails.description ===
+                                                  outcome.description
+                                            )
+                                              ? "bg-[#0100821A] text-vintage-50"
+                                              : "hover:bg-gray-50"
+                                          }`}
+                                          onClick={() =>
+                                            handleSelectBet(
+                                              game,
+                                              outcome.name,
+                                              outcome.price,
+                                              market.key,
+                                              outcome.point,
+                                              outcome.description,
+                                              bm.key
+                                            )
+                                          }
+                                        >
+                                          <p className="font-medium text-sm">
+                                            {outcome.description
+                                              ? `${outcome.description}: ${outcome.name} ${
+                                                  outcome.point
+                                                    ? `(${outcome.point})`
+                                                    : ""
+                                                }`
+                                              : outcome.name}
+                                          </p>
+                                          <p className="text-xl font-bold mt-1">
+                                            {formatOdds(outcome.price)}
+                                          </p>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <DrawerFooter>
+                          <DrawerClose>
+                            <Button
+                              variant="outline"
+                              className="w-full mx-auto max-w-xs"
+                            >
+                              Close
+                            </Button>
+                          </DrawerClose>
+                        </DrawerFooter>
+                      </DrawerContent>
+                    </Drawer>
                   </div>
 
                   {availableMarkets.length > 0 && (
-                    <Tabs defaultValue={marketTypes[0] || "h2h"}>
+                    <Tabs
+                      defaultValue={marketTypes[0] || "h2h"}
+                      className="w-full"
+                    >
                       <TabsList className="mb-4 bg-[#F8F8F8]">
                         {marketTypes.includes("h2h") && (
-                          <TabsTrigger value="h2h" className="text-[#848BAC]">
+                          <TabsTrigger
+                            value="h2h"
+                            className="text-[#848BAC] text-sm"
+                          >
                             Moneyline
                           </TabsTrigger>
                         )}
                         {marketTypes.includes("spreads") && (
                           <TabsTrigger
                             value="spreads"
-                            className="text-[#848BAC]"
+                            className="text-[#848BAC] text-sm"
                           >
                             Spread
                           </TabsTrigger>
@@ -342,7 +484,7 @@ const GamesTable = ({
                         {marketTypes.includes("totals") && (
                           <TabsTrigger
                             value="totals"
-                            className="text-[#848BAC]"
+                            className="text-[#848BAC] text-sm"
                           >
                             Total
                           </TabsTrigger>
@@ -351,13 +493,13 @@ const GamesTable = ({
 
                       {marketTypes.includes("h2h") && (
                         <TabsContent value="h2h">
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="grid grid-cols-2 gap-2">
                             {bookmaker.markets
                               .find((m: any) => m.key === "h2h")
                               ?.outcomes.map((outcome: any) => (
                                 <div
                                   key={outcome.name}
-                                  className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                                  className={`border rounded-lg p-2 text-center cursor-pointer transition-colors ${
                                     bets.find(
                                       (b) =>
                                         b.id === game.id &&
@@ -374,12 +516,13 @@ const GamesTable = ({
                                       outcome.price,
                                       "h2h",
                                       undefined,
+                                      undefined,
                                       selectedBookmakerKey
                                     )
                                   }
                                 >
                                   <p className="font-medium">{outcome.name}</p>
-                                  <p className="text-2xl font-bold mt-2">
+                                  <p className="text-xl font-bold mt-1">
                                     {formatOdds(outcome.price)}
                                   </p>
                                 </div>
@@ -390,13 +533,13 @@ const GamesTable = ({
 
                       {marketTypes.includes("spreads") && (
                         <TabsContent value="spreads">
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="grid grid-cols-2 gap-2">
                             {bookmaker.markets
                               .find((m: any) => m.key === "spreads")
                               ?.outcomes.map((outcome: any) => (
                                 <div
                                   key={outcome.name}
-                                  className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                                  className={`border rounded-lg p-2 text-center cursor-pointer transition-colors ${
                                     bets.find(
                                       (b) =>
                                         b.id === game.id &&
@@ -413,6 +556,7 @@ const GamesTable = ({
                                       outcome.price,
                                       "spreads",
                                       outcome.point,
+                                      undefined,
                                       selectedBookmakerKey
                                     )
                                   }
@@ -424,7 +568,7 @@ const GamesTable = ({
                                       : ""}
                                     {outcome.point}
                                   </p>
-                                  <p className="text-2xl font-bold">
+                                  <p className="text-xl font-bold">
                                     {formatOdds(outcome.price)}
                                   </p>
                                 </div>
@@ -435,13 +579,13 @@ const GamesTable = ({
 
                       {marketTypes.includes("totals") && (
                         <TabsContent value="totals">
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="grid grid-cols-2 gap-2">
                             {bookmaker.markets
                               .find((m: any) => m.key === "totals")
                               ?.outcomes.map((outcome: any) => (
                                 <div
                                   key={outcome.name}
-                                  className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                                  className={`border rounded-lg p-2 text-center cursor-pointer transition-colors ${
                                     bets.find(
                                       (b) =>
                                         b.id === game.id &&
@@ -458,6 +602,7 @@ const GamesTable = ({
                                       outcome.price,
                                       "totals",
                                       outcome.point,
+                                      undefined,
                                       selectedBookmakerKey
                                     )
                                   }
@@ -466,7 +611,7 @@ const GamesTable = ({
                                   <p className="text-sm text-[#848BAC] mb-1">
                                     {outcome.point}
                                   </p>
-                                  <p className="text-2xl font-bold">
+                                  <p className="text-xl font-bold">
                                     {formatOdds(outcome.price)}
                                   </p>
                                 </div>
