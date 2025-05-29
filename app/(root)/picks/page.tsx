@@ -24,7 +24,7 @@ import {
 import { accountStore } from "@/app/store/account";
 import { ALL_STEP_CHALLENGES } from "@/lib/constants";
 import Parlay from "./parlay";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Zap } from "lucide-react";
 import GamesTable from "./games";
 
 type oddsType = "american" | "decimal";
@@ -504,7 +504,6 @@ const Page = () => {
                 oddsFormat={oddsFormat}
                 addBet={addBet}
                 bets={selectedBets}
-                setBets={setSelectedBets}
                 setFeaturedMatch={setFeaturedMatch}
                 account={account}
                 search={search}

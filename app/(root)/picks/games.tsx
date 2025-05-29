@@ -1,8 +1,15 @@
 "use client";
 import { ALL_STEP_CHALLENGES } from "@/lib/constants";
 import { americanToDecimalOdds, getOriginalAccountValue } from "@/lib/utils";
-import { LoaderCircle, RefreshCw, Info, ChevronRight } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import {
+  LoaderCircle,
+  RefreshCw,
+  Info,
+  ChevronRight,
+  Zap,
+  Trophy,
+} from "lucide-react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { toast } from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,8 +30,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useQuery } from "@tanstack/react-query";
-import { getEventOdds } from "@/app/mutations/get-event-odd";
+import { getLiveScores } from "@/app/mutations/get-live-scores";
 import { useGetGames } from "@/app/hooks/useGetGames";
+import debounce from "lodash/debounce";
+import { getEventOdds } from "@/app/mutations/get-event-odd";
 
 interface GetGamesParams {
   sportKey: string;
@@ -41,7 +50,7 @@ interface GetGamesParams {
 }
 
 interface Bet {
-  id: number;
+  id: string;
   team: string;
   odds: number;
   pick: number;
@@ -53,6 +62,11 @@ interface Bet {
   sport: string;
   event: string;
   league: string;
+  live?: boolean;
+  homeScore?: string;
+  awayScore?: string;
+  period?: string;
+  clock?: string;
   betDetails: {
     market: string;
     point: number | null;
@@ -79,7 +93,6 @@ const GamesTable = ({
   oddsFormat,
   addBet,
   bets,
-  setBets,
   setFeaturedMatch,
   account,
   tab,
@@ -87,37 +100,61 @@ const GamesTable = ({
   bookmakers,
   setBookmakers,
 }: GetGamesParams) => {
-  const {
-    data: games,
-    isLoading,
-    refetch,
-  } = useGetGames({
-    sportKey: sportKey,
-    oddsFormat: oddsFormat,
-  });
-
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [selectedBookmakers, setSelectedBookmakers] = useState<
     Record<string, string>
   >({});
   const [currentPage, setCurrentPage] = useState(1);
   const [openDrawerGameId, setOpenDrawerGameId] = useState<string | null>(null);
+  const [activeMode, setActiveMode] = useState<"upcoming" | "live">("upcoming");
+  const [isModeTransitioning, setIsModeTransitioning] = useState(false);
   const gamesPerPage = 10;
 
+  // Debounce mode switching
+  const debouncedSetActiveMode = useCallback(
+    debounce((mode: "upcoming" | "live") => {
+      setActiveMode(mode);
+      setIsModeTransitioning(true);
+    }, 300),
+    []
+  );
+
+  // Fetch live scores when in live mode
+  const { data: liveScores, isLoading: isLiveScoresLoading } = useQuery({
+    queryKey: ["liveScores", sportKey],
+    queryFn: () => getLiveScores({ sportKey }),
+    enabled: activeMode === "live",
+    refetchInterval: 30000, // Poll every 30 seconds
+    keepPreviousData: true, // Retain previous data during refetch
+  });
+
+  // Fetch all games (upcoming and live)
+  const {
+    data: games,
+    isLoading: isGamesLoading,
+    refetch,
+  } = useGetGames({
+    sportKey,
+    oddsFormat,
+  });
+
+  // Fetch additional markets for drawer
   const { data: eventOdds, isLoading: isEventOddsLoading } = useQuery({
     queryKey: ["eventOdds", openDrawerGameId, sportKey, oddsFormat],
     queryFn: () =>
       getEventOdds({ sportKey, eventId: openDrawerGameId!, oddsFormat }),
     enabled: !!openDrawerGameId,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 60 * 1000, // Cache for 1 minute
   });
 
+  // Synchronize refetch on mode or odds format change
   useEffect(() => {
-    refetch();
+    refetch().finally(() => setIsModeTransitioning(false));
     setLastUpdated(new Date());
     setCurrentPage(1);
-  }, [oddsFormat, refetch]);
+  }, [oddsFormat, activeMode, liveScores, refetch, sportKey]);
 
+  // Set initial bookmakers and featured match
   useEffect(() => {
     if (games && games.length > 0) {
       setFeaturedMatch(games[0]);
@@ -132,15 +169,64 @@ const GamesTable = ({
   }, [games, setFeaturedMatch]);
 
   const filteredGames = useMemo(() => {
-    if (!isLoading && search !== "") {
-      return games?.filter(
+    if (
+      isGamesLoading ||
+      (activeMode === "live" && isLiveScoresLoading) ||
+      isModeTransitioning
+    ) {
+      return [];
+    }
+
+    let processedGames = games || [];
+
+    if (activeMode === "live" && liveScores) {
+      // Match live games from liveScores with odds from games
+      processedGames = liveScores
+        .filter((scoreGame: any) => !scoreGame.completed) // Exclude completed games
+        .map((scoreGame: any) => {
+          const oddsGame = games?.find((g: any) => g.id === scoreGame.id);
+          if (!oddsGame) return null;
+
+          const homeScore =
+            scoreGame.scores?.find((s: any) => s.name === scoreGame.home_team)
+              ?.score || "0";
+          const awayScore =
+            scoreGame.scores?.find((s: any) => s.name === scoreGame.away_team)
+              ?.score || "0";
+
+          return {
+            ...oddsGame,
+            homeScore,
+            awayScore,
+            period: scoreGame.scoreboard?.display_period,
+            clock: scoreGame.scoreboard?.display_clock,
+            isLive: true,
+          };
+        })
+        .filter((game: any) => game !== null);
+    } else {
+      // For upcoming mode, filter out completed games
+      processedGames = processedGames.filter((game: any) => !game.completed);
+    }
+
+    if (search !== "") {
+      processedGames = processedGames.filter(
         (game: any) =>
           game.home_team?.toLowerCase().includes(search.toLowerCase()) ||
           game.away_team?.toLowerCase().includes(search.toLowerCase())
       );
     }
-    return games;
-  }, [search, isLoading, games]);
+
+    return processedGames;
+  }, [
+    search,
+    isGamesLoading,
+    isLiveScoresLoading,
+    isModeTransitioning,
+    games,
+    liveScores,
+    activeMode,
+  ]);
 
   const totalPages = useMemo(() => {
     return filteredGames ? Math.ceil(filteredGames.length / gamesPerPage) : 0;
@@ -219,6 +305,11 @@ const GamesTable = ({
       sport: tab,
       league: sportKey,
       event: `${game.home_team} vs ${game.away_team}`,
+      live: game.isLive,
+      homeScore: game.homeScore,
+      awayScore: game.awayScore,
+      period: game.period,
+      clock: game.clock,
       betDetails: {
         market,
         point: point ?? null,
@@ -245,10 +336,17 @@ const GamesTable = ({
     setCurrentPage(newPage);
   };
 
-  if (isLoading) {
+  if (
+    isGamesLoading ||
+    (activeMode === "live" && isLiveScoresLoading) ||
+    isModeTransitioning
+  ) {
     return (
       <div className="w-full h-full pb-12 flex justify-center items-center">
         <LoaderCircle className="animate-spin" />
+        {isModeTransitioning && (
+          <p className="ml-4 text-[#848BAC]">Switching modes...</p>
+        )}
       </div>
     );
   }
@@ -263,8 +361,25 @@ const GamesTable = ({
 
   if (filteredGames.length === 0) {
     return (
-      <div className="w-full h-full pb-12 justify-center items-center font-bold text-center">
-        <p>No games found.</p>
+      <div className="w-full h-full pb-12 flex gap-3 flex-col justify-center items-center font-bold text-center">
+        <p>No {activeMode === "live" ? "live" : "upcoming"} games found.</p>
+
+        <button
+          onClick={() =>
+            debouncedSetActiveMode(
+              activeMode === "upcoming" ? "live" : "upcoming"
+            )
+          }
+          className="p-2.5 px-4 md:px-6 text-xs uppercase bg-vintage-50 text-white font-bold rounded-full flex items-center gap-2"
+        >
+          {activeMode !== "live" && <Zap className="text-sm" />}
+          {activeMode !== "upcoming" && (
+            <Trophy className="text-xs" size={18} />
+          )}
+          <span className="hidden md:inline">
+            {activeMode !== "live" ? "Live Betting" : "Upcoming Games"}
+          </span>
+        </button>
       </div>
     );
   }
@@ -279,16 +394,38 @@ const GamesTable = ({
             </p>
           )}
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => refetch()}
-          disabled={isLoading}
-          className="flex items-center gap-1"
-        >
-          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            disabled={
+              isGamesLoading || isLiveScoresLoading || isModeTransitioning
+            }
+            className="flex items-center gap-1"
+          >
+            <RefreshCw
+              className={`h-4 w-4 ${isGamesLoading || isLiveScoresLoading || isModeTransitioning ? "animate-spin" : ""}`}
+            />
+            Refresh
+          </Button>
+          <button
+            onClick={() =>
+              debouncedSetActiveMode(
+                activeMode === "upcoming" ? "live" : "upcoming"
+              )
+            }
+            className="p-2.5 px-4 md:px-6 text-xs uppercase bg-vintage-50 text-white font-bold rounded-full flex items-center gap-2"
+          >
+            {activeMode !== "live" && <Zap className="text-sm" />}
+            {activeMode !== "upcoming" && (
+              <Trophy className="text-xs" size={18} />
+            )}
+            <span className="hidden md:inline">
+              {activeMode !== "live" ? "Live Betting" : "Upcoming Games"}
+            </span>
+          </button>
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4">
         {paginatedGames.map((game: any) => {
@@ -306,15 +443,38 @@ const GamesTable = ({
           return (
             <div
               key={game.id}
-              className="border rounded-lg p-4 bg-white shadow-sm"
+              className={`border rounded-lg p-4 bg-white shadow-sm ${
+                game.isLive ? "border-l-4 border-l-vintage-50" : ""
+              }`}
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-lg font-bold text-vintage-50">
-                    {game.home_team} vs {game.away_team}
-                  </h3>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-lg font-bold text-vintage-50">
+                      {game.home_team} vs {game.away_team}
+                    </h3>
+                    {game.isLive && (
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge
+                          variant="secondary"
+                          className="animate-pulse bg-red-600 text-white uppercase "
+                        >
+                          Live
+                        </Badge>
+                        {game.period && (
+                          <Badge variant="outline">{game.period}</Badge>
+                        )}
+                        {game.clock && (
+                          <Badge variant="outline">{game.clock}</Badge>
+                        )}
+                      </div>
+                    )}
+                  </div>
                   <p className="text-sm text-[#848BAC]">
-                    {getStartTime(game.commence_time)} • {game.sport_title}
+                    {game.isLive
+                      ? `${game.homeScore} - ${game.awayScore}`
+                      : getStartTime(game.commence_time)}{" "}
+                    • {game.sport_title}
                   </p>
                 </div>
                 <TooltipProvider>
@@ -370,9 +530,27 @@ const GamesTable = ({
                             {game.home_team} vs {game.away_team}
                           </DrawerTitle>
                           <p className="text-sm text-[#848BAC]">
-                            {getStartTime(game.commence_time)} •{" "}
-                            {game.sport_title}
+                            {game.isLive
+                              ? `${game.homeScore} - ${game.awayScore}`
+                              : getStartTime(game.commence_time)}{" "}
+                            • {game.sport_title}
                           </p>
+                          {game.isLive && (
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant="secondary"
+                                className="animate-pulse"
+                              >
+                                Live
+                              </Badge>
+                              {game.period && (
+                                <Badge variant="outline">{game.period}</Badge>
+                              )}
+                              {game.clock && (
+                                <Badge variant="outline">{game.clock}</Badge>
+                              )}
+                            </div>
+                          )}
                         </DrawerHeader>
                         {isEventOddsLoading ? (
                           <div className="text-center py-12">

@@ -58,6 +58,7 @@
     "i": "^0.3.7",
     "i18n-iso-countries": "^7.12.0",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.414.0",
     "mailgun.js": "^10.2.4",
     "mongodb": "^6.8.0",
@@ -94,6 +95,7 @@
   },
   "devDependencies": {
     "@types/authorizenet": "^1.0.2",
+    "@types/lodash": "^4.17.17",
     "@types/node": "^20.17.14",
     "@types/react": "^18",
     "@types/react-dom": "^18",
