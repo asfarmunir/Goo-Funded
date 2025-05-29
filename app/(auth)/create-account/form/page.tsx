@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import CheckoutPayment from "@/components/shared/CheckoutPayment";
-import logo from "@/public/goFunded/logo.png";
+import logo from "../../../../public/gofunded/logo.png";
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 

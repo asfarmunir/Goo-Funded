@@ -12,7 +12,7 @@ import { userStore } from "../store/user";
 import { Account } from "@prisma/client";
 import CreateAccountModal from "@/components/shared/CreateAccountModal";
 import Intercom from "@intercom/messenger-js-sdk";
-import logo from "@/public/goFunded/logo.png";
+import logo from "../../public/gofunded/logo.png";
 import Nav from "@/components/shared/Nav";
 const layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
