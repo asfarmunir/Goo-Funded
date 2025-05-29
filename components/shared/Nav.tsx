@@ -37,7 +37,7 @@ import {
 import { HiMenu } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { FaUser } from "react-icons/fa6";
-import logo from "@/public/goFunded/logoIcon.png";
+import logo from "../../public/goFunded/logoIcon.png";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
