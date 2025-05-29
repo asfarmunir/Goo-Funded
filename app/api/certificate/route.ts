@@ -8,14 +8,14 @@ import { getCompletePhase3Certificate } from "@/lib/certificates/complete-phase3
 import { getPayoutCertificate } from "@/lib/certificates/payout";
 import { getLifetimePayoutCertificate } from "@/lib/certificates/lifetime-payout";
 import { Account, User } from "@prisma/client";
-import Mailgun from "mailgun.js";
-import formData from "form-data";
+// import Mailgun from "mailgun.js";
+// import formData from "form-data";
 
-const mailgun = new Mailgun(formData);
-const client = mailgun.client({
-  username: "api",
-  key: process.env.MAILGUN_API_KEY!,
-});
+// const mailgun = new Mailgun(formData);
+// const client = mailgun.client({
+//   username: "api",
+//   key: process.env.MAILGUN_API_KEY!,
+// });
 
 export async function POST(req: NextRequest) {
   await connectToDatabase();
@@ -76,69 +76,33 @@ export async function POST(req: NextRequest) {
     console.log("Sending email to:", user.email);
     console.log("Certificate title:", certificate.title);
 
-    // Send email
-    // const msg = {
-    //   to: user.email,
-    //   from: FROM_EMAIL,
-    //   subject: certificate.title,
-    //   html: certificate.template,
-    // };
-    // sgMail
-    //   .send(msg)
-    //   .then(async () => {
-    //     // Create certificate
-    //     const newCertificate = await prisma.certificateHistory.create({
-    //       data: {
-    //         type: certificateType,
-    //         accountId,
-    //         userId: user.id,
-    //       },
-    //     });
-    //     if (!newCertificate) {
-    //       return NextResponse.json(
-    //         { message: "Certificate not created" },
-    //         { status: 401 }
-    //       );
-    //     }
-
+          // try {
+          //    await client.messages.create(process.env.MAILGUN_DOMAIN!, {
+          //     to: user.email,
+          //     from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+          //     subject: certificate.title,
+          //     html: certificate.template || "",
+          //   });
         
-         
-
-
-    //     return NextResponse.json({ message: "Email sent" }, { status: 200 });
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //     throw new Error("Error sending email");
-    //   });
-
-          try {
-             await client.messages.create(process.env.MAILGUN_DOMAIN!, {
-              to: user.email,
-              from: `Your App <no-reply@${process.env.MAILGUN_DOMAIN}>`,
-              subject: certificate.title,
-              html: certificate.template || "",
-            });
+          //     const newCertificate = await prisma.certificateHistory.create({
+          //       data: {
+          //         type: certificateType,
+          //         accountId,
+          //         userId: user.id,
+          //       },
+          //     });
+          //     if (!newCertificate) {
+          //       return NextResponse.json(
+          //         { message: "Certificate not created" },
+          //         { status: 401 }
+          //       );
+          //     }
+          //   //  return response;
         
-              const newCertificate = await prisma.certificateHistory.create({
-                data: {
-                  type: certificateType,
-                  accountId,
-                  userId: user.id,
-                },
-              });
-              if (!newCertificate) {
-                return NextResponse.json(
-                  { message: "Certificate not created" },
-                  { status: 401 }
-                );
-              }
-            //  return response;
-        
-            } catch (error) {
-                console.error("Mailgun Error:", error);
-                throw error;
-            }
+          //   } catch (error) {
+          //       console.error("Mailgun Error:", error);
+          //       throw error;
+          //   }
 
     return NextResponse.json({ message: "Email sent" }, { status: 200 });
   } catch (error) {
