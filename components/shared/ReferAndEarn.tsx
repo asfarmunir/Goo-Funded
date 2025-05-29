@@ -39,7 +39,7 @@ const page = () => {
 
   let link = `${
     process.env.NODE_ENV === "production"
-      ? "https://app.vantagepicks.com"
+      ? "https://play.goofunded.com"
       : "http://localhost:3000"
   }/signup?referrerCode=${currentUser.referralCode}`;
 
@@ -148,7 +148,9 @@ const page = () => {
             <p className="text-sm  ">Total Earned</p>
             <h2 className="text-2xl 2xl:text-3xl text-vintage-50 font-bold">
               $
-              {isPending ? "Loading..." : user.user.totalEarned.toFixed(2) || 0}{" "}
+              {isPending
+                ? "Loading..."
+                : user.user.totalEarned.toFixed(2) || 0}{" "}
             </h2>
           </div>
           <div className=" bg-white  p-4 md:p-6 rounded-2xl h-[170px] relative ">

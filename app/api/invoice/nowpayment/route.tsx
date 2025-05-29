@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
     const baseUrl =
       process.env.NODE_ENV === "development"
         ? "https://9747-103-149-240-162.ngrok-free.app"
-        : "https://app.vantagepicks.com";
+        : "https://play.goofunded.com";
 
     // Create NowPayments.io invoice
     const nowPaymentsResponse = await axios.post(

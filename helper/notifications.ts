@@ -1,6 +1,6 @@
 import { NotificationType } from "@prisma/client";
 
-const APP_BASE_URL = process.env.NODE_ENV === "production" ? "https://app.vantagepicks.com" : "http://localhost:3000";
+const APP_BASE_URL = process.env.NODE_ENV === "production" ? "https://play.goofunded.com" : "http://localhost:3000";
 
 export const sendNotification = async (
   message: string,

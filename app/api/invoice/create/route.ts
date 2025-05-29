@@ -53,8 +53,8 @@ export async function POST(req: NextRequest) {
         },
         billingDetails,
       },
-      // redirect_url: `https://app.vantagepicks.com/payment-success`,
-      // cancel_url: `https://app.vantagepicks.com/payment-cancelled`,
+      // redirect_url: `https://play.goofunded.com/payment-success`,
+      // cancel_url: `https://play.goofunded.com/payment-cancelled`,
     };
 
     const charge = await Charge.create(chargeData);
