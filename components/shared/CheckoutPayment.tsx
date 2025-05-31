@@ -381,8 +381,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                       Billing Details
                     </h2>
                     <p className=" text-[#848BAC] -mt-2  ">
-                      Get funded and earn up to 70% of your trading
-                      profits.{" "}
+                      Get funded and earn up to 70% of your sports profits.{" "}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 w-full md:w-fit ">

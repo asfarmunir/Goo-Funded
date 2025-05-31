@@ -267,13 +267,13 @@ const Sidebar = () => {
             <SheetClose ref={closeRef} />
             <SheetHeader>
               <div className=" relative h-full min-h-screen flex flex-col items-start gap-7">
-                <div className="flex  w-full gap-3 mt-4">
+                <div className="flex   w-full gap-3 mt-4">
                   <Image
-                    src="/vintage/images/logo.svg"
+                    src={logo}
                     alt="logo"
                     width={200}
                     height={200}
-                    className=" w-[60px] 2xl:w-[70px] "
+                    className=" w-[50px] h-[50px] "
                   />
                   <div className="flex items-start flex-col w-full">
                     <button className=" data-[state=open]:border-2    data-[state=open]:shadow  data-[state=open]:border-vintage-50/50     font-semibold   justify-start text-nowrap w-full md:w-fit  text-xs md:text-sm px-1.5 md:px-1.5 py-1.5 2xl:py-1.5  rounded-full inline-flex items-center gap-2">

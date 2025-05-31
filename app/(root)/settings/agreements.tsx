@@ -84,7 +84,7 @@ export default function Agreements() {
             <h3 className=" text-lg uppercase font-bold">Funded Agreement</h3>
 
             <p className="text-sm text-[#848BAC] tracking-wide ">
-              By signing this, you are agreeing to picks hero funded account
+              By signing this, you are agreeing to GooFunded funded account
               policies.
             </p>
           </div>
@@ -116,7 +116,7 @@ export default function Agreements() {
             </h3>
 
             <p className="text-sm text-[#848BAC] tracking-wide ">
-              By signing this, you are agreeing to picks hero non-disclosure
+              By signing this, you are agreeing to GooFunded non-disclosure
               agreement.
             </p>
           </div>

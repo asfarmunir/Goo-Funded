@@ -201,10 +201,10 @@ const page = () => {
                           account.rank === 1
                             ? " bg-yellow-400 text-black shadow-inner shadow-slate-400"
                             : account.rank === 2
-                            ? " bg-gray-400 text-black shadow-inner shadow-slate-400"
-                            : account.rank === 3
-                            ? " bg-[#cd7f32] text-white shadow-inner shadow-slate-400"
-                            : " "
+                              ? " bg-gray-400 text-black shadow-inner shadow-slate-400"
+                              : account.rank === 3
+                                ? " bg-[#cd7f32] text-white shadow-inner shadow-slate-400"
+                                : " "
                         }
                           
                           
@@ -302,7 +302,7 @@ const page = () => {
               Follow our social channels for exclusive tips, news, and offers.
             </p>
             <Link
-              href="https://discord.gg/w3DDEnkSbS"
+              href="https://discord.com/"
               target="_blank"
               rel="noreferrer"
               className="text-center  py-4 w-fit text-sm rounded-full bg-vintage-50  px-6 font-bold"
