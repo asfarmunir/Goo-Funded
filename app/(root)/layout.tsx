@@ -98,7 +98,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
             </p>
           </div>
         )}
-        <Link href={"https://proppicks.com/"} target="_blank">
+        {/* <Link href={"https://proppicks.com/"} target="_blank">
           <Image
             src="/images/propicks.svg"
             alt="bg"
@@ -106,7 +106,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
             height={150}
             className="absolute bottom-6 left-6 z-50 2xl:w-[200px] "
           />
-        </Link>
+        </Link> */}
       </main>
     </>
   );
