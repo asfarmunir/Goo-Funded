@@ -146,6 +146,7 @@ const GamesTable = ({
     enabled: !!openDrawerGameId,
     staleTime: 60 * 1000, // Cache for 1 minute
   });
+  console.log("🚀 ~ eventOdds:", eventOdds);
 
   // Synchronize refetch on mode or odds format change
   useEffect(() => {
@@ -611,6 +612,10 @@ const GamesTable = ({
                                                 }`
                                               : outcome.name}
                                           </p>
+                                          <p className="text-sm text-[#848BAC] mb-1">
+                                            {outcome.point}
+                                          </p>
+
                                           <p className="text-xl font-bold mt-1">
                                             {formatOdds(outcome.price)}
                                           </p>
