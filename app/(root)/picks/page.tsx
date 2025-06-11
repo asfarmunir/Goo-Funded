@@ -69,7 +69,6 @@ const Page = () => {
 
   // SPORTS DATA
   const { data, isPending, isError } = useGetSports();
-  console.log("🚀 ~ Page ~ data:", data);
 
   // ACCOUNT
   const account = accountStore((state) => state.account);
@@ -471,12 +470,12 @@ const Page = () => {
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger className="bg-white font-bold justify-center w-[95%] text-sm 2xl:text-base md:w-fit p-3.5 py-3 md:mr-3 rounded-full inline-flex items-center gap-2">
-                  <Image
+                  {/* <Image
                     src="/icons/odds.png"
                     alt="Arrow Icon"
                     width={23}
                     height={23}
-                  />
+                  /> */}
                   <span className="text-[#737897] capitalize">Odds:</span>
                   {oddsFormat}
                   <FaAngleDown className="text-lg ml-0.5 mb-0.5" />

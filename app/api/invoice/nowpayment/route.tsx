@@ -11,6 +11,10 @@ export async function POST(req: NextRequest) {
   try {
     const { customerEmail, invoice, account, billingDetails } =
       await req.json();
+    console.log("🚀 ~ POST ~ account:", account);
+    console.log("🚀 ~ POST ~ billingDetails:", billingDetails);
+    console.log("🚀 ~ POST ~ customerEmail:", customerEmail);
+    console.log("🚀 ~ POST ~ invoice:", invoice);
 
     await connectToDatabase();
 

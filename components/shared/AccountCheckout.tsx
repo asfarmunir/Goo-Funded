@@ -20,7 +20,7 @@ interface Steps {
 const two_step: Steps[] = [
   {
     title: "1K",
-    price: "$10",
+    price: "$49",
   },
   {
     title: "2K",
@@ -383,7 +383,7 @@ const AccountCheckout: React.FC<AccountCheckoutProps> = ({
                   </h2>
                 </div>
                 <div className=" flex flex-col gap-3  py-6  ">
-                  <div className="flex items-center justify-between">
+                  {/* <div className="flex items-center justify-between">
                     <h2 className="font-semibold">original Price</h2>
                     <p className=" font-semibold">
                       {" "}
@@ -395,10 +395,10 @@ const AccountCheckout: React.FC<AccountCheckoutProps> = ({
                       ).toFixed(0)}
                       .00
                     </p>
-                  </div>
+                  </div> */}
                   <div className="flex items-center justify-between">
                     <h2 className="text-lg font-semibold text-[#3E4347]">
-                      Discounted Price
+                      {/* Discounted Price */} Total Price
                     </h2>
                     <p className="text-lg font-semibold text-[#3E4347]">
                       {activeAccountSize.price}.00

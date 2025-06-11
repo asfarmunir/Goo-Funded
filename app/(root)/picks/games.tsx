@@ -3,11 +3,11 @@ import { ALL_STEP_CHALLENGES } from "@/lib/constants";
 import { americanToDecimalOdds, getOriginalAccountValue } from "@/lib/utils";
 import {
   LoaderCircle,
-  RefreshCw,
   Info,
   ChevronRight,
   Zap,
   Trophy,
+  Clock,
 } from "lucide-react";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { toast } from "react-hot-toast";
@@ -108,6 +108,7 @@ const GamesTable = ({
   const [openDrawerGameId, setOpenDrawerGameId] = useState<string | null>(null);
   const [activeMode, setActiveMode] = useState<"upcoming" | "live">("upcoming");
   const [isModeTransitioning, setIsModeTransitioning] = useState(false);
+  const [showSoonGames, setShowSoonGames] = useState(false);
   const gamesPerPage = 10;
 
   // Debounce mode switching
@@ -115,6 +116,7 @@ const GamesTable = ({
     debounce((mode: "upcoming" | "live") => {
       setActiveMode(mode);
       setIsModeTransitioning(true);
+      setShowSoonGames(false); // Reset soon games filter when switching modes
     }, 300),
     []
   );
@@ -146,7 +148,6 @@ const GamesTable = ({
     enabled: !!openDrawerGameId,
     staleTime: 60 * 1000, // Cache for 1 minute
   });
-  console.log("🚀 ~ eventOdds:", eventOdds);
 
   // Synchronize refetch on mode or odds format change
   useEffect(() => {
@@ -208,6 +209,16 @@ const GamesTable = ({
     } else {
       // For upcoming mode, filter out completed games
       processedGames = processedGames.filter((game: any) => !game.completed);
+
+      // Filter for games within the next 3 hours if showSoonGames is true
+      if (showSoonGames) {
+        const now = new Date();
+        const threeHoursFromNow = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+        processedGames = processedGames.filter((game: any) => {
+          const gameTime = new Date(game.commence_time);
+          return gameTime >= now && gameTime <= threeHoursFromNow;
+        });
+      }
     }
 
     if (search !== "") {
@@ -227,6 +238,7 @@ const GamesTable = ({
     games,
     liveScores,
     activeMode,
+    showSoonGames,
   ]);
 
   const totalPages = useMemo(() => {
@@ -241,7 +253,10 @@ const GamesTable = ({
 
   const getStartTime = (commenceTime: string) => {
     const date = new Date(commenceTime);
-    return date.toLocaleString();
+    return date.toLocaleString(undefined, {
+      dateStyle: "short",
+      timeStyle: "short",
+    });
   };
 
   const formatOdds = (odds: number) => {
@@ -337,6 +352,12 @@ const GamesTable = ({
     setCurrentPage(newPage);
   };
 
+  const toggleSoonGames = () => {
+    setShowSoonGames((prev) => !prev);
+    setCurrentPage(1); // Reset to first page when toggling
+    refetch();
+  };
+
   if (
     isGamesLoading ||
     (activeMode === "live" && isLiveScoresLoading) ||
@@ -363,24 +384,42 @@ const GamesTable = ({
   if (filteredGames.length === 0) {
     return (
       <div className="w-full h-full pb-12 flex gap-3 flex-col justify-center items-center font-bold text-center">
-        <p>No {activeMode === "live" ? "live" : "upcoming"} games found.</p>
-
-        <button
-          onClick={() =>
-            debouncedSetActiveMode(
-              activeMode === "upcoming" ? "live" : "upcoming"
-            )
-          }
-          className="p-2.5 px-4 md:px-6 text-xs uppercase bg-vintage-50 text-white font-bold rounded-full flex items-center gap-2"
-        >
-          {activeMode !== "live" && <Zap className="text-sm" />}
-          {activeMode !== "upcoming" && (
-            <Trophy className="text-xs" size={18} />
+        <p>
+          No{" "}
+          {activeMode === "live"
+            ? "live"
+            : showSoonGames
+              ? "soon upcoming"
+              : "upcoming"}{" "}
+          games found.
+        </p>
+        <div className="flex items-center gap-4 flex-col md:flex-row">
+          {activeMode === "upcoming" && (
+            <Button
+              onClick={toggleSoonGames}
+              className="flex items-center gap-1 py-2.5 shadow-sm hover:bg-slate-50 rounded-full bg-white text-vintage-50 font-bold"
+            >
+              <Clock className="h-4 w-4" />
+              {showSoonGames ? "Show All Games" : "Show Games Within 3 Hours"}
+            </Button>
           )}
-          <span className="hidden md:inline">
-            {activeMode !== "live" ? "Live Betting" : "Upcoming Games"}
-          </span>
-        </button>
+          <button
+            onClick={() =>
+              debouncedSetActiveMode(
+                activeMode === "upcoming" ? "live" : "upcoming"
+              )
+            }
+            className="p-2.5 px-4 md:px-6 text-xs uppercase bg-vintage-50 text-white font-bold rounded-full flex items-center gap-2"
+          >
+            {activeMode !== "live" && <Zap className="text-sm" />}
+            {activeMode !== "upcoming" && (
+              <Trophy className="text-xs" size={18} />
+            )}
+            <span className="hidden md:inline">
+              {activeMode !== "live" ? "Live Betting" : "Upcoming Games"}
+            </span>
+          </button>
+        </div>
       </div>
     );
   }
@@ -396,20 +435,15 @@ const GamesTable = ({
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => refetch()}
-            disabled={
-              isGamesLoading || isLiveScoresLoading || isModeTransitioning
-            }
-            className="flex items-center gap-1"
-          >
-            <RefreshCw
-              className={`h-4 w-4 ${isGamesLoading || isLiveScoresLoading || isModeTransitioning ? "animate-spin" : ""}`}
-            />
-            Refresh
-          </Button>
+          {activeMode === "upcoming" && (
+            <Button
+              onClick={toggleSoonGames}
+              className="flex items-center gap-1 py-2.5 hover:bg-slate-50 shadow-sm rounded-full bg-white text-vintage-50 font-bold"
+            >
+              <Clock className="h-4 w-4" />
+              {showSoonGames ? "Show All Games" : "Show Games Within 3 Hours"}
+            </Button>
+          )}
           <button
             onClick={() =>
               debouncedSetActiveMode(

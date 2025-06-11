@@ -11,27 +11,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FaAngleDown } from "react-icons/fa";
-import { LuSearch } from "react-icons/lu";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
+import { TbBrandTelegram } from "react-icons/tb";
 import { useState } from "react";
 import { TiArrowLeft, TiArrowRight } from "react-icons/ti";
-import { MdOutlineArrowUpward } from "react-icons/md";
-import { TbMessageCircleSearch } from "react-icons/tb";
-import { Input } from "@/components/ui/input";
 import { useGetLeaderboard } from "@/app/hooks/useGetLeaderboard";
 import { getCountryCode } from "countries-list";
 import ReactCountryFlag from "react-country-flag";
 import { profileLevels } from "@/lib/constants";
 import Link from "next/link";
+import { Instagram } from "lucide-react";
 
 // type profileLevelName =
 //   | "NEWBIE"
@@ -48,7 +36,7 @@ type profileLevelName =
   | "TopTier"
   | "RegionalPlayer";
 
-const page = () => {
+const Page = () => {
   const { data, isPending: loading } = useGetLeaderboard();
   const [search, setSearch] = useState<string>("");
   const [sort, setSort] = useState<"TOP" | "BOTTOM" | "AVERAGE">("TOP");
@@ -301,37 +289,36 @@ const page = () => {
             <p className=" text-sm 2xl:text-base text-center text-white mb-4">
               Follow our social channels for exclusive tips, news, and offers.
             </p>
-            <Link
+            {/* <Link
               href="https://discord.com/"
               target="_blank"
               rel="noreferrer"
               className="text-center  py-4 w-fit text-sm rounded-full bg-vintage-50  px-6 font-bold"
             >
               JOIN DISCORD
-            </Link>
-          </div>
-          <div className=" flex items-center  gap-3">
-            <Image
-              src="/vintage/images/discord.svg"
-              alt="Logo"
-              width={140}
-              className=" w-[80px] md:w-[145px] "
-              height={140}
-            />
-            <Image
-              src="/vintage/images/youtube.svg"
-              alt="Logo"
-              width={140}
-              className=" w-[80px] md:w-[145px] "
-              height={140}
-            />
-            <Image
-              src="/vintage/images/instagram.svg"
-              alt="Logo"
-              width={150}
-              className=" w-[80px] md:w-[145px] "
-              height={150}
-            />
+            </Link> */}
+            <div className=" flex items-center  gap-3">
+              <Link
+                href={
+                  "https://www.instagram.com/goofunded?igsh=OGYyNmdkcnlwMWt1&utm_source=qr"
+                }
+                target="_blank"
+                rel="noreferrer"
+                className=" rounded-full font-bold p-3 px-5 bg-pink-600"
+              >
+                <Instagram className="text-white w-6 h-6 inline-block mr-2 " />
+                Instagram
+              </Link>
+              <Link
+                href={"https://t.me/+2uyZolvSUb02NmM0"}
+                target="_blank"
+                rel="noreferrer"
+                className=" rounded-full font-bold p-3 px-5 bg-blue-600"
+              >
+                <TbBrandTelegram className="text-white w-6 h-6 inline-block mr-2 " />
+                Telegram
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -339,4 +326,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

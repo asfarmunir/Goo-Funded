@@ -32,6 +32,37 @@ import { ColorRing } from "react-loader-spinner";
 import { toast } from "react-hot-toast";
 import { FiUploadCloud } from "react-icons/fi";
 
+const bankDetails = [
+  {
+    bankImage: "/banks/bank1.jpeg",
+    link: "https://t.me/goofundedrecharge",
+  },
+  {
+    bankImage: "/banks/bank2.jpeg",
+    link: "https://t.me/goofundedrecharge",
+  },
+  {
+    bankImage: "/banks/bank3.jpeg",
+    link: "https://t.me/goofundedrecharge",
+  },
+  {
+    bankImage: "/banks/bank4.jpeg",
+    link: "https://t.me/goofundedrecharge",
+  },
+  {
+    bankImage: "/banks/bank5.jpeg",
+    link: "https://t.me/goofundedrecharge",
+  },
+  {
+    bankImage: "/banks/bank6.jpeg",
+    link: "https://t.me/goofundedrecharge",
+  },
+  {
+    bankImage: "/banks/bank7.jpeg",
+    link: "https://t.me/goofundedrecharge",
+  },
+];
+
 import { z } from "zod";
 import {
   AlertDialog,
@@ -144,10 +175,10 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
       lastName: "",
       country: "",
       // phoneNumber: "",
-      state: "",
-      city: "",
-      address: "",
-      postalCode: "",
+      state: "not_required",
+      city: "not_required",
+      address: "not_required",
+      postalCode: "not_required",
     },
   });
 
@@ -168,7 +199,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
   useMemo(() => {
     if (typeof window === "undefined") return;
     const localStep = localStorage.getItem("step");
-    setStep(localStep ? parseInt(localStep) : 1);
+    setStep(1);
   }, []);
 
   useEffect(() => {
@@ -245,32 +276,32 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
 
   // card form submit
 
-  async function onSubmitCardPayment(values: any) {
-    // create account
-    const billing = JSON.parse(localStorage.getItem("billing") || "{}");
-    const data = {
-      account: {
-        accountSize: accountSize,
-        accountType:
-          accountType === "2"
-            ? "TWO_STEP"
-            : accountType === "3"
-              ? "THREE_STEP"
-              : "",
-        status: "CHALLENGE",
-        accountPrice: accountPrice,
-      },
-      billingDetailsData,
-      paymentCardNumber: values?.paymentCardNumber,
-      cardCode: values?.cardSecurityCode,
-      expirationDate: values?.expirationDate,
-      email: session?.user?.email,
-      userId: session?.user ? (session?.user.id ?? "") : "",
-    };
+  // async function onSubmitCardPayment(values: any) {
+  //   // create account
+  //   const billing = JSON.parse(localStorage.getItem("billing") || "{}");
+  //   const data = {
+  //     account: {
+  //       accountSize: accountSize,
+  //       accountType:
+  //         accountType === "2"
+  //           ? "TWO_STEP"
+  //           : accountType === "3"
+  //             ? "THREE_STEP"
+  //             : "",
+  //       status: "CHALLENGE",
+  //       accountPrice: accountPrice,
+  //     },
+  //     billingDetailsData,
+  //     paymentCardNumber: values?.paymentCardNumber,
+  //     cardCode: values?.cardSecurityCode,
+  //     expirationDate: values?.expirationDate,
+  //     email: session?.user?.email,
+  //     userId: session?.user ? (session?.user.id ?? "") : "",
+  //   };
 
-    // submit to api
-    createCreditInvoice(data);
-  }
+  //   // submit to api
+  //   createCreditInvoice(data);
+  // }
 
   const handleClose = () => {
     setIsOpen(false);
@@ -288,50 +319,71 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
   });
 
   // Cloudinary upload handler using your existing function
-  const uploadImagesToCloudinary = async (
-    files: FileList
-  ): Promise<string[]> => {
-    const uploadPromises = Array.from(files).map((file) => {
-      const data = new FormData();
-      data.append("file", file);
-      data.append("upload_preset", "bluepro");
-      data.append("cloud_name", "dbfn18wm7");
+  // const uploadImagesToCloudinary = async (
+  //   files: FileList
+  // ): Promise<string[]> => {
+  //   const uploadPromises = Array.from(files).map((file) => {
+  //     const data = new FormData();
+  //     data.append("file", file);
+  //     data.append("upload_preset", "bluepro");
+  //     data.append("cloud_name", "dbfn18wm7");
 
-      return fetch("https://api.cloudinary.com/v1_1/dbfn18wm7/upload", {
-        method: "POST",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => data.secure_url)
-        .catch((error) => {
-          console.error("Error uploading image:", error);
-          return null;
-        });
-    });
+  //     return fetch("https://api.cloudinary.com/v1_1/dbfn18wm7/upload", {
+  //       method: "POST",
+  //       body: data,
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => data.secure_url)
+  //       .catch((error) => {
+  //         console.error("Error uploading image:", error);
+  //         return null;
+  //       });
+  //   });
 
-    const results = await Promise.all(uploadPromises);
-    return results.filter((url) => url !== null) as string[];
-  };
+  //   const results = await Promise.all(uploadPromises);
+  //   return results.filter((url) => url !== null) as string[];
+  // };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setUploading(true);
-      try {
-        const uploadedUrls = await uploadImagesToCloudinary(e.target.files);
-        p2pPaymentForm.setValue("paymentProof", uploadedUrls);
-        toast.success("Payment proof uploaded successfully");
-      } catch (error) {
-        toast.error("Failed to upload payment proof");
-        console.error(error);
-      } finally {
-        setUploading(false);
-      }
-    }
-  };
+  // const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     setUploading(true);
+  //     try {
+  //       const uploadedUrls = await uploadImagesToCloudinary(e.target.files);
+  //       p2pPaymentForm.setValue("paymentProof", uploadedUrls);
+  //       toast.success("Payment proof uploaded successfully");
+  //     } catch (error) {
+  //       toast.error("Failed to upload payment proof");
+  //       console.error(error);
+  //     } finally {
+  //       setUploading(false);
+  //     }
+  //   }
+  // };
 
   // P2P payment submit handler
-  async function onSubmitP2PPayment(values: P2PPaymentData) {
-    const billing = JSON.parse(localStorage.getItem("billing") || "{}");
+  async function onSubmitP2PPayment(e: any) {
+    e.preventDefault();
+    //data object to send to the p2p API
+    // const data = {
+    //   account: {
+    //     accountSize: accountSize,
+    //     accountType:
+    //       accountType === "2"
+    //         ? "TWO_STEP"
+    //         : accountType === "3"
+    //           ? "THREE_STEP"
+    //           : "",
+    //     status: "CHALLENGE",
+    //     accountPrice: accountPrice,
+    //   },
+    //   billingDetailsData: billingDetailsData,
+    //   paymentMethod: "p2p",
+    //   transactionId: values.transactionId,
+    //   paymentProof: values.paymentProof,
+    //   email: session?.user?.email,
+    //   userId: session?.user ? (session?.user.id ?? "") : "",
+    // };
+
     const data = {
       account: {
         accountSize: accountSize,
@@ -344,16 +396,42 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
         status: "CHALLENGE",
         accountPrice: accountPrice,
       },
-      billingDetailsData: billingDetailsData,
-      paymentMethod: "p2p",
-      transactionId: values.transactionId,
-      paymentProof: values.paymentProof,
-      email: session?.user?.email,
-      userId: session?.user ? (session?.user.id ?? "") : "",
+      billingDetails: billingDetailsData,
+      customerEmail: session?.user?.email,
+      invoice: {
+        amount: accountPrice,
+        currencyFrom: "USD",
+      },
     };
+    console.log("🚀 ~ onSubmitP2PPayment ~ data:", data);
+
+    const newTab = window.open("about:blank", "_blank");
+
+    if (!newTab) {
+      console.warn("Popup was blocked. Please allow popups for this site.");
+      return;
+    }
+    try {
+      toast.loading("Creating payment invoice...");
+      const res = await createPaymentInvoice(data);
+      if (res?.invoice_url) {
+        newTab.location.href = res.invoice_url;
+        toast.dismiss();
+        toast.success("Invoice created successfully");
+        setCoinbaseInvoiceCreated(true);
+      } else {
+        console.error("No hosted_url found in the response");
+        newTab.close();
+      }
+    } catch (error) {
+      toast.dismiss();
+      console.error("Failed to create invoice:", error);
+      toast.error("Failed to create invoice");
+      newTab.close();
+    }
 
     // I used the previous credit card setup here, i requests call to the /person-to-person route.
-    createCreditInvoice(data);
+    // createCreditInvoice(data);
   }
 
   return (
@@ -445,7 +523,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                         />
                       </div>
                       <div className="flex flex-col md:flex-row items-center justify-between w-full gap-2 md:gap-4">
-                        <FormItem className="mb-4 w-full">
+                        {/* <FormItem className="mb-4 w-full">
                           <FormControl>
                             <Input
                               required
@@ -456,7 +534,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                             />
                           </FormControl>
                           <FormMessage />
-                        </FormItem>
+                        </FormItem> */}
                         {/* <FormField
                           control={form.control}
                           name="phoneNumber"
@@ -476,6 +554,18 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                         /> */}
                       </div>
                       <div className="flex flex-col md:flex-row items-center justify-between w-full gap-2 md:gap-4">
+                        <FormItem className="mb-4 w-full">
+                          <FormControl>
+                            <Input
+                              required
+                              readOnly
+                              placeholder="enter your email"
+                              defaultValue={session?.user?.email}
+                              className="  focus:outline-none  focus:border mr-0 md:mr-6  rounded-lg bg-[#F2F2F2] w-full p-4  2xl:py-6 2xl:px-6 text-vintage-50 leading-tight "
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                         <FormField
                           control={form.control}
                           name="country"
@@ -503,7 +593,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                             </FormItem>
                           )}
                         />
-                        <FormField
+                        {/* <FormField
                           control={form.control}
                           name="state"
                           render={({ field }) => (
@@ -519,9 +609,9 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                               <FormMessage />
                             </FormItem>
                           )}
-                        />
+                        /> */}
                       </div>
-                      <div className="flex flex-col md:flex-row items-center justify-between w-full gap-2 md:gap-4">
+                      {/* <div className="flex flex-col md:flex-row items-center justify-between w-full gap-2 md:gap-4">
                         <FormField
                           control={form.control}
                           name="city"
@@ -574,7 +664,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                             <FormMessage />
                           </FormItem>
                         )}
-                      />
+                      /> */}
                       <p className="text-xs  2xl:text-sm text-[#848BAC]  pl- font-medium  peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                         By providing your information, you allow Goo Funded to
                         charge your card for future payments in accordance with
@@ -595,7 +685,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                         >
                           <span className=" capitalize">Next</span>
                         </Button>
-                        <Button
+                        {/* <Button
                           type="submit"
                           onClick={() => setActionType("crypto")}
                           className="bg-vintage-50    rounded-full  text-white font-semibold py-6 px-12 w-full 2xl:text-base text-sm   focus:outline-none focus:shadow-outline"
@@ -620,316 +710,271 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                           ) : (
                             <span className=" capitalize">Pay With Crypto</span>
                           )}
-                        </Button>
+                        </Button> */}
                       </div>
                     </form>
                   </div>
                 </Form>
               ) : !coinbaseInvoiceCreated && step === 2 ? (
-                // (
-                //   <Form {...paymentCardForm}>
-                //     <div
-                //       id="first"
-                //       className="flex flex-col  items-center justify-center w-full gap-6 md:gap-4  my-6"
+                // <Form {...p2pPaymentForm}>
+                //   <div className="flex flex-col items-center justify-center w-full gap-6 md:gap-4 my-6">
+                //     <form
+                //       onSubmit={p2pPaymentForm.handleSubmit(onSubmitP2PPayment)}
+                //       className="w-full"
                 //     >
-                //       <form
-                //         id="container"
-                //         onSubmit={paymentCardForm.handleSubmit(
-                //           onSubmitCardPayment
-                //         )}
-                //         className=" w-full "
-                //         autoComplete="false"
-                //       >
-                //         <FormField
-                //           control={paymentCardForm.control}
-                //           name="paymentCardNumber"
-                //           render={({ field }) => (
-                //             <FormItem className="mb-4 w-full">
-                //               <FormControl>
-                //                 <Input
-                //                   required
-                //                   placeholder="  enter card number"
-                //                   {...field}
-                //                   className="  focus:outline-none  focus:border mr-0 md:mr-6  rounded-lg bg-[#F2F2F2] w-full p-4  2xl:py-6 2xl:px-6 text-vintage-50 leading-tight "
-                //                 />
-                //               </FormControl>
-                //               <FormMessage />
-                //             </FormItem>
-                //           )}
-                //         />
-                //         <div className="flex flex-col md:flex-row items-center justify-between w-full gap-2 md:gap-4">
-                //           <FormField
-                //             control={paymentCardForm.control}
-                //             name="cardSecurityCode"
-                //             render={({ field }) => (
-                //               <FormItem className="mb-4 w-full">
-                //                 <FormControl>
-                //                   <Input
-                //                     required
-                //                     autoComplete="new-password"
-                //                     maxLength={3}
-                //                     placeholder=" enter card cvv"
-                //                     {...field}
-                //                     className="  focus:outline-none  focus:border mr-0 md:mr-6  rounded-lg bg-[#F2F2F2] w-full p-4  2xl:py-6 2xl:px-6 text-vintage-50 leading-tight "
-                //                   />
-                //                 </FormControl>
-                //                 <FormMessage />
-                //               </FormItem>
-                //             )}
-                //           />
-                //           <FormField
-                //             control={paymentCardForm.control}
-                //             name="expirationDate"
-                //             render={({ field }) => (
-                //               <FormItem className="mb-4 w-full">
-                //                 <FormControl>
-                //                   <Input
-                //                     required
-                //                     autoComplete="off"
-                //                     placeholder=" enter card expiry date"
-                //                     {...field}
-                //                     className="  focus:outline-none  focus:border mr-0 md:mr-6  rounded-lg bg-[#F2F2F2] w-full p-4  2xl:py-6 2xl:px-6 text-vintage-50 leading-tight "
-                //                   />
-                //                 </FormControl>
-                //                 <FormMessage />
-                //               </FormItem>
-                //             )}
-                //           />
-                //         </div>
-
-                //         <p className="text-xs  2xl:text-sm text-[#848BAC]  font-medium  peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                //           By providing your card information, you allow Vintage
-                //           Picks to charge your card for future payments in
-                //           accordance with their terms.
+                //       <div className="mb-6 p-4 bg-gray-100 rounded-lg">
+                //         <h3 className="font-bold text-xl ">
+                //           Bank Transfer Details
+                //         </h3>
+                //         <h4 className="text-lg font-semibold border-b w-full  pb-3 text-slate-500 mb-3">
+                //           Please transfer the amount to the following bank
+                //           account and wait for confirmation.
+                //         </h4>
+                //         <p className="mb-2">
+                //           <strong>Bank Name:</strong> Your Bank Name
                 //         </p>
+                //         <p className="mb-2">
+                //           <strong>Account Name:</strong> Your Account Name
+                //         </p>
+                //         <p className="mb-2">
+                //           <strong>Account Number:</strong> 1234567890
+                //         </p>
+                //         <p className="mb-2">
+                //           <strong>SWIFT/BIC:</strong> YOURSWIFTCODE
+                //         </p>
+                //         <p className="mb-2">
+                //           <strong>Reference:</strong> Use your email as
+                //           reference
+                //         </p>
+                //       </div>
 
-                //         <div className="flex w-full mt-4 mb-6 gap-2 items-center justify-center">
-                //           <button
-                //             className="bg-[#001E451A]    border border-slate-100 rounded-full  mt-4 text-vintage-50 font-semibold py-3  px-12 w-full 2xl:text-base text-sm   focus:outline-none focus:shadow-outline"
-                //             onClick={() => setStep(1)}
-                //           >
-                //             Back
-                //           </button>
-                //           <Button
-                //             disabled={isPending}
-                //             type="submit"
-                //             className="bg-vintage-50   w-full rounded-full mt-4 text-white font-semibold py-6 px-10 2xl:text-base text-sm   focus:outline-none focus:shadow-outline"
-                //           >
-                //             {isPending ? (
-                //               <ColorRing
-                //                 visible={true}
-                //                 height="35"
-                //                 width="35"
-                //                 ariaLabel="color-ring-loading"
-                //                 wrapperStyle={{}}
-                //                 wrapperClass="color-ring-wrapper"
-                //                 colors={[
-                //                   "#ffffff",
-                //                   "#ffffff",
-                //                   "#ffffff",
-                //                   "#ffffff",
-                //                   "#ffffff",
-                //                 ]}
+                //       <FormField
+                //         control={p2pPaymentForm.control}
+                //         name="transactionId"
+                //         render={({ field }) => (
+                //           <FormItem className="mb-4 w-full">
+                //             <FormLabel>Transaction ID/Reference</FormLabel>
+                //             <FormControl>
+                //               <Input
+                //                 required
+                //                 placeholder="Enter your bank transaction ID"
+                //                 {...field}
+                //                 className="focus:outline-none focus:border mr-0 md:mr-6 rounded-lg bg-[#F2F2F2] w-full p-4 2xl:py-6 2xl:px-6 text-vintage-50 leading-tight"
                 //               />
-                //             ) : (
-                //               <span className=" capitalize">Let's Go</span>
-                //             )}
-                //           </Button>
-                //         </div>
-                //       </form>
-                //     </div>
-                //   </Form>
-                // )
-                <Form {...p2pPaymentForm}>
-                  <div className="flex flex-col items-center justify-center w-full gap-6 md:gap-4 my-6">
-                    <form
-                      onSubmit={p2pPaymentForm.handleSubmit(onSubmitP2PPayment)}
-                      className="w-full"
+                //             </FormControl>
+                //             <FormMessage />
+                //           </FormItem>
+                //         )}
+                //       />
+
+                //       <FormField
+                //         control={p2pPaymentForm.control}
+                //         name="paymentProof"
+                //         render={({ field }) => (
+                //           <FormItem className="mb-4 w-full">
+                //             <FormLabel>
+                //               Payment Proof (Screenshot/Receipt)
+                //             </FormLabel>
+                //             <FormControl>
+                //               <div>
+                //                 <input
+                //                   type="file"
+                //                   accept="image/*"
+                //                   multiple
+                //                   onChange={handleFileUpload}
+                //                   className="hidden"
+                //                   id="payment-proof-upload"
+                //                 />
+                //                 <label
+                //                   htmlFor="payment-proof-upload"
+                //                   className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition"
+                //                 >
+                //                   {uploading ? (
+                //                     <div className="flex items-center gap-2">
+                //                       <ColorRing
+                //                         visible={true}
+                //                         height="24"
+                //                         width="24"
+                //                         ariaLabel="color-ring-loading"
+                //                         wrapperStyle={{}}
+                //                         wrapperClass="color-ring-wrapper"
+                //                         colors={[
+                //                           "#000",
+                //                           "#000",
+                //                           "#000",
+                //                           "#000",
+                //                           "#000",
+                //                         ]}
+                //                       />
+                //                       <span>Uploading...</span>
+                //                     </div>
+                //                   ) : (
+                //                     <>
+                //                       <FiUploadCloud
+                //                         size={40}
+                //                         className=" mb-3 text-gray-500"
+                //                       />
+
+                //                       <p className="text-sm text-gray-500">
+                //                         Click to upload or drag and drop
+                //                       </p>
+                //                       <p className="text-xs text-gray-400">
+                //                         PNG, JPG up to 5MB
+                //                       </p>
+                //                     </>
+                //                   )}
+                //                 </label>
+                //                 {p2pPaymentForm.watch("paymentProof")?.length >
+                //                   0 && (
+                //                   <div className="mt-4 grid grid-cols-2 gap-2">
+                //                     {p2pPaymentForm
+                //                       .watch("paymentProof")
+                //                       .map((url, index) => (
+                //                         <div
+                //                           key={index}
+                //                           className="relative bg-slate-50 flex items-center justify-center "
+                //                         >
+                //                           <Image
+                //                             src={url}
+                //                             width={150}
+                //                             height={150}
+                //                             alt={`Payment proof ${index + 1}`}
+                //                             className="rounded-md object-cover"
+                //                           />
+                //                           <button
+                //                             type="button"
+                //                             onClick={() => {
+                //                               const updatedProofs = [
+                //                                 ...p2pPaymentForm.watch(
+                //                                   "paymentProof"
+                //                                 ),
+                //                               ];
+                //                               updatedProofs.splice(index, 1);
+                //                               p2pPaymentForm.setValue(
+                //                                 "paymentProof",
+                //                                 updatedProofs
+                //                               );
+                //                             }}
+                //                             className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                //                           >
+                //                             <MdOutlineClose size={14} />
+                //                           </button>
+                //                         </div>
+                //                       ))}
+                //                   </div>
+                //                 )}
+                //               </div>
+                //             </FormControl>
+                //             <FormMessage />
+                //           </FormItem>
+                //         )}
+                //       />
+
+                //       <div className="flex w-full mt-4 mb-6 gap-2 items-center justify-center">
+                //         <button
+                //           className="bg-[#001E451A] border border-slate-100 rounded-full mt-4 text-vintage-50 font-semibold py-3 px-12 w-full 2xl:text-base text-sm focus:outline-none focus:shadow-outline"
+                //           onClick={() => setStep(1)}
+                //         >
+                //           Back
+                //         </button>
+                //         <Button
+                //           disabled={isPending || uploading}
+                //           type="submit"
+                //           className="bg-vintage-50 w-full rounded-full mt-4 text-white font-semibold py-6 px-10 2xl:text-base text-sm focus:outline-none focus:shadow-outline"
+                //         >
+                //           {isPending ? (
+                //             <ColorRing
+                //               visible={true}
+                //               height="35"
+                //               width="35"
+                //               ariaLabel="color-ring-loading"
+                //               wrapperStyle={{}}
+                //               wrapperClass="color-ring-wrapper"
+                //               colors={[
+                //                 "#ffffff",
+                //                 "#ffffff",
+                //                 "#ffffff",
+                //                 "#ffffff",
+                //                 "#ffffff",
+                //               ]}
+                //             />
+                //           ) : (
+                //             <span className="capitalize">Submit Payment</span>
+                //           )}
+                //         </Button>
+                //       </div>
+                //     </form>
+                //   </div>
+                // </Form>
+                <div className="flex flex-col items-center justify-center w-full gap-6 md:gap-4 my-6">
+                  <form onSubmit={onSubmitP2PPayment} className="w-full">
+                    <div className="mb-4">
+                      <h2 className="text-2xl font-semibold">
+                        1. Pay with crypto
+                      </h2>
+                      <p className="text-sm 2xl:text-base text-gray-500">
+                        You will be redirected to the crypto payment gateway to
+                        complete your payment. Please ensure you have the
+                        necessary funds in your wallet.
+                      </p>
+                    </div>
+                    <Button
+                      type="submit"
+                      className="bg-vintage-50  mb-12  rounded-full  text-white font-semibold py-6 px-12 w-full 2xl:text-base text-sm   focus:outline-none focus:shadow-outline"
+                      disabled={loadingInvoice}
                     >
-                      <div className="mb-6 p-4 bg-gray-100 rounded-lg">
-                        <h3 className="font-bold text-xl ">
-                          Bank Transfer Details
-                        </h3>
-                        <h4 className="text-lg font-semibold border-b w-full  pb-3 text-slate-500 mb-3">
-                          Please transfer the amount to the following bank
-                          account and wait for confirmation.
-                        </h4>
-                        <p className="mb-2">
-                          <strong>Bank Name:</strong> Your Bank Name
-                        </p>
-                        <p className="mb-2">
-                          <strong>Account Name:</strong> Your Account Name
-                        </p>
-                        <p className="mb-2">
-                          <strong>Account Number:</strong> 1234567890
-                        </p>
-                        <p className="mb-2">
-                          <strong>SWIFT/BIC:</strong> YOURSWIFTCODE
-                        </p>
-                        <p className="mb-2">
-                          <strong>Reference:</strong> Use your email as
-                          reference
-                        </p>
-                      </div>
-
-                      <FormField
-                        control={p2pPaymentForm.control}
-                        name="transactionId"
-                        render={({ field }) => (
-                          <FormItem className="mb-4 w-full">
-                            <FormLabel>Transaction ID/Reference</FormLabel>
-                            <FormControl>
-                              <Input
-                                required
-                                placeholder="Enter your bank transaction ID"
-                                {...field}
-                                className="focus:outline-none focus:border mr-0 md:mr-6 rounded-lg bg-[#F2F2F2] w-full p-4 2xl:py-6 2xl:px-6 text-vintage-50 leading-tight"
+                      {loadingInvoice ? (
+                        <ColorRing
+                          visible={true}
+                          height="35"
+                          width="35"
+                          ariaLabel="color-ring-loading"
+                          wrapperStyle={{}}
+                          wrapperClass="color-ring-wrapper"
+                          colors={[
+                            "#ffffff",
+                            "#ffffff",
+                            "#ffffff",
+                            "#ffffff",
+                            "#ffffff",
+                          ]}
+                        />
+                      ) : (
+                        <span className=" capitalize">Start Transaction</span>
+                      )}
+                    </Button>
+                    <div className="mb-4">
+                      <h2 className="text-2xl font-semibold">
+                        2. Bank Transfer Options
+                      </h2>
+                      <p className="text-sm 2xl:text-base text-gray-500">
+                        Please transfer the amount to the following bank account
+                        and wait for confirmation.
+                      </p>
+                    </div>
+                    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {bankDetails.map((detail, index) => (
+                        <Link
+                          href={detail.link}
+                          key={index}
+                          className="block h-full"
+                        >
+                          <div className="h-full bg-[#F8F8F8] shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                            <div className="relative aspect-video w-full">
+                              <Image
+                                src={detail.bankImage}
+                                alt="bank transfer"
+                                fill
+                                className="object-contain p-4" /* Added padding and contain to keep logos proportional */
+                                sizes="(max-width: 768px) 100vw, 50vw"
                               />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={p2pPaymentForm.control}
-                        name="paymentProof"
-                        render={({ field }) => (
-                          <FormItem className="mb-4 w-full">
-                            <FormLabel>
-                              Payment Proof (Screenshot/Receipt)
-                            </FormLabel>
-                            <FormControl>
-                              <div>
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  multiple
-                                  onChange={handleFileUpload}
-                                  className="hidden"
-                                  id="payment-proof-upload"
-                                />
-                                <label
-                                  htmlFor="payment-proof-upload"
-                                  className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition"
-                                >
-                                  {uploading ? (
-                                    <div className="flex items-center gap-2">
-                                      <ColorRing
-                                        visible={true}
-                                        height="24"
-                                        width="24"
-                                        ariaLabel="color-ring-loading"
-                                        wrapperStyle={{}}
-                                        wrapperClass="color-ring-wrapper"
-                                        colors={[
-                                          "#000",
-                                          "#000",
-                                          "#000",
-                                          "#000",
-                                          "#000",
-                                        ]}
-                                      />
-                                      <span>Uploading...</span>
-                                    </div>
-                                  ) : (
-                                    <>
-                                      <FiUploadCloud
-                                        size={40}
-                                        className=" mb-3 text-gray-500"
-                                      />
-
-                                      <p className="text-sm text-gray-500">
-                                        Click to upload or drag and drop
-                                      </p>
-                                      <p className="text-xs text-gray-400">
-                                        PNG, JPG up to 5MB
-                                      </p>
-                                    </>
-                                  )}
-                                </label>
-                                {p2pPaymentForm.watch("paymentProof")?.length >
-                                  0 && (
-                                  <div className="mt-4 grid grid-cols-2 gap-2">
-                                    {p2pPaymentForm
-                                      .watch("paymentProof")
-                                      .map((url, index) => (
-                                        <div
-                                          key={index}
-                                          className="relative bg-slate-50 flex items-center justify-center "
-                                        >
-                                          <Image
-                                            src={url}
-                                            width={150}
-                                            height={150}
-                                            alt={`Payment proof ${index + 1}`}
-                                            className="rounded-md object-cover"
-                                          />
-                                          <button
-                                            type="button"
-                                            onClick={() => {
-                                              const updatedProofs = [
-                                                ...p2pPaymentForm.watch(
-                                                  "paymentProof"
-                                                ),
-                                              ];
-                                              updatedProofs.splice(index, 1);
-                                              p2pPaymentForm.setValue(
-                                                "paymentProof",
-                                                updatedProofs
-                                              );
-                                            }}
-                                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
-                                          >
-                                            <MdOutlineClose size={14} />
-                                          </button>
-                                        </div>
-                                      ))}
-                                  </div>
-                                )}
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <div className="flex w-full mt-4 mb-6 gap-2 items-center justify-center">
-                        <button
-                          className="bg-[#001E451A] border border-slate-100 rounded-full mt-4 text-vintage-50 font-semibold py-3 px-12 w-full 2xl:text-base text-sm focus:outline-none focus:shadow-outline"
-                          onClick={() => setStep(1)}
-                        >
-                          Back
-                        </button>
-                        <Button
-                          disabled={isPending || uploading}
-                          type="submit"
-                          className="bg-vintage-50 w-full rounded-full mt-4 text-white font-semibold py-6 px-10 2xl:text-base text-sm focus:outline-none focus:shadow-outline"
-                        >
-                          {isPending ? (
-                            <ColorRing
-                              visible={true}
-                              height="35"
-                              width="35"
-                              ariaLabel="color-ring-loading"
-                              wrapperStyle={{}}
-                              wrapperClass="color-ring-wrapper"
-                              colors={[
-                                "#ffffff",
-                                "#ffffff",
-                                "#ffffff",
-                                "#ffffff",
-                                "#ffffff",
-                              ]}
-                            />
-                          ) : (
-                            <span className="capitalize">Submit Payment</span>
-                          )}
-                        </Button>
-                      </div>
-                    </form>
-                  </div>
-                </Form>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </form>
+                </div>
               ) : null}
 
               {coinbaseInvoiceCreated && (
@@ -992,7 +1037,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                     </h2>
                   </div>
                   <div className=" flex flex-col gap-3  py-6  ">
-                    <div className="flex items-center justify-between">
+                    {/* <div className="flex items-center justify-between">
                       <h2 className="font-semibold">original Price</h2>
                       <p className=" font-semibold">
                         {" "}
@@ -1003,11 +1048,9 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                         ).toFixed(0)}
                         .00
                       </p>
-                    </div>
+                    </div> */}
                     <div className="flex items-center justify-between">
-                      <h2 className="text-lg font-semibold">
-                        Discounted Price
-                      </h2>
+                      <h2 className="text-lg font-semibold">Total Price</h2>
                       <p className="text-lg font-semibold">
                         {accountPrice!}.00
                       </p>
