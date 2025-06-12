@@ -100,6 +100,7 @@ const GamesTable = ({
   bookmakers,
   setBookmakers,
 }: GetGamesParams) => {
+  console.log("🚀 ~ sportKey:", sportKey);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [selectedBookmakers, setSelectedBookmakers] = useState<
     Record<string, string>

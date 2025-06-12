@@ -36,30 +36,37 @@ const bankDetails = [
   {
     bankImage: "/banks/bank1.jpeg",
     link: "https://t.me/goofundedrecharge",
+    name: "Lbankalik",
   },
   {
     bankImage: "/banks/bank2.jpeg",
     link: "https://t.me/goofundedrecharge",
+    name: "Banque Populaire",
   },
   {
     bankImage: "/banks/bank3.jpeg",
     link: "https://t.me/goofundedrecharge",
+    name: "CIH",
   },
   {
     bankImage: "/banks/bank4.jpeg",
     link: "https://t.me/goofundedrecharge",
+    name: "Attijariwafa Bank",
   },
   {
     bankImage: "/banks/bank5.jpeg",
     link: "https://t.me/goofundedrecharge",
+    name: "Bank of Africa",
   },
   {
     bankImage: "/banks/bank6.jpeg",
     link: "https://t.me/goofundedrecharge",
+    name: "Al Barid Bank",
   },
   {
     bankImage: "/banks/bank7.jpeg",
     link: "https://t.me/goofundedrecharge",
+    name: "Societe Generale",
   },
 ];
 
@@ -948,8 +955,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                         2. Bank Transfer Options
                       </h2>
                       <p className="text-sm 2xl:text-base text-gray-500">
-                        Please transfer the amount to the following bank account
-                        and wait for confirmation.
+                        Select the prefered bank to complete your payment.
                       </p>
                     </div>
                     <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -959,15 +965,20 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                           key={index}
                           className="block h-full"
                         >
-                          <div className="h-full bg-[#F8F8F8] shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                          <div className="h-full bg-[#F8F8F8] shadow-md rounded-lg overflow-hidden hover:shadow-2xl transition-shadow">
                             <div className="relative aspect-video w-full">
                               <Image
                                 src={detail.bankImage}
                                 alt="bank transfer"
                                 fill
-                                className="object-contain p-4" /* Added padding and contain to keep logos proportional */
+                                className="object-contain p-4"
                                 sizes="(max-width: 768px) 100vw, 50vw"
                               />
+                            </div>
+                            <div className="p-4 bg-vintage-50 flex items-center justify-center">
+                              <h3 className="text-lg font-bold text-white">
+                                {detail.name}
+                              </h3>
                             </div>
                           </div>
                         </Link>

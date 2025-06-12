@@ -4,7 +4,7 @@ interface GetGamesParams {
 }
 
 export const getGames = async ({
-  sportKey = "americanfootball_nfl",
+  sportKey = "soccer_uefa_champs_league",
   oddsFormat = "american",
 }: GetGamesParams) => {
   

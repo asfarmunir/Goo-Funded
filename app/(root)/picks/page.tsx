@@ -9,12 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaAngleDown } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
-import { TiArrowLeft, TiArrowRight } from "react-icons/ti";
 import BetSlip from "./bet-slip";
 import {
   americanToDecimalOdds,
@@ -24,7 +22,7 @@ import {
 import { accountStore } from "@/app/store/account";
 import { ALL_STEP_CHALLENGES } from "@/lib/constants";
 import Parlay from "./parlay";
-import { ChevronDown, Zap } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import GamesTable from "./games";
 
 type oddsType = "american" | "decimal";
@@ -51,8 +49,8 @@ interface Bet {
 }
 
 const Page = () => {
-  const [tab, setTab] = useState("football");
-  const [leagueTab, setLeagueTab] = useState("");
+  const [tab, setTab] = useState("Soccer");
+  const [leagueTab, setLeagueTab] = useState("soccer_italy_serie_a");
   const [oddsFormat, setOddsFormat] = useState<oddsType>("decimal");
   const [featuredMatch, setFeaturedMatch] = useState<any>(null);
   const [selectedBets, setSelectedBets] = useState<Bet[]>([]);
@@ -69,6 +67,7 @@ const Page = () => {
 
   // SPORTS DATA
   const { data, isPending, isError } = useGetSports();
+  console.log("🚀 ~ Page ~ data:", data);
 
   // ACCOUNT
   const account = accountStore((state) => state.account);
@@ -180,7 +179,14 @@ const Page = () => {
     const leaguesArray = data.filter((sport: any) => sport.group === tab);
     setLeagues(leaguesArray);
     setTab(tab);
-    changeLeagueTab(leaguesArray[0].key);
+    // Set default league to soccer_italy_serie_a for Soccer tab, else first league
+    const defaultLeague =
+      tab === "Soccer"
+        ? leaguesArray.find(
+            (league: any) => league.key === "soccer_italy_serie_a"
+          )?.key || leaguesArray[0]?.key
+        : leaguesArray[0]?.key;
+    changeLeagueTab(defaultLeague);
   };
 
   const changeLeagueTab = (league: string) => {
@@ -194,88 +200,44 @@ const Page = () => {
     setOddsFormat(format);
   };
 
-  // FEATURED MATCH
-  const addGameToBetSlip = ({ game, home }: { game: any; home: boolean }) => {
-    const market = "h2h";
-    const bookmakerKey = game.bookmakers[0]?.key || "unknown";
-    const outcome = home
-      ? game.bookmakers[0]?.markets[0]?.outcomes[0]
-      : game.bookmakers[0]?.markets[0]?.outcomes[1];
-    const selection = outcome?.name;
-    const odds = outcome?.price;
-
-    const conflictingBet = selectedBets.find(
-      (bet) =>
-        bet.id === game.id &&
-        bet.betDetails.market === market &&
-        bet.team !== selection
-    );
-    if (conflictingBet) {
-      toast.error(
-        `Cannot add ${selection} (Moneyline) as it conflicts with ${conflictingBet.team} (Moneyline) for this game.`
-      );
-      return;
-    }
-
-    const existingBet = selectedBets.find(
-      (b) =>
-        b.id === game.id &&
-        b.betDetails.market === market &&
-        b.team === selection &&
-        b.betDetails.bookmaker === bookmakerKey
-    );
-    if (existingBet) {
-      toast.error("This bet is already in your bet slip.");
-      return;
-    }
-
-    const initialPick =
-      getOriginalAccountValue(account) * ALL_STEP_CHALLENGES.minPickAmount;
-    const bet: Bet = {
-      id: game.id,
-      team: selection,
-      odds: Number(odds),
-      pick: initialPick,
-      toWin:
-        oddsFormat === "decimal"
-          ? initialPick * (Number(odds) - 1)
-          : initialPick * (americanToDecimalOdds(Number(odds)) - 1),
-      oddsFormat: oddsFormat,
-      home_team: game.home_team,
-      away_team: game.away_team,
-      gameDate: game.commence_time,
-      sport: tab,
-      league: leagueTab,
-      event: `${game.home_team} vs ${game.away_team}`,
-      betDetails: {
-        market: market,
-        point: null,
-        bookmaker: bookmakerKey,
-      },
-    };
-
-    addBet(bet);
-  };
-
   // SPORTS DATA
   useEffect(() => {
     if (data) {
-      const filteredData: string[] = data.filter(
+      const filteredData = data.filter(
         (sport: any) => !sport.key.includes("_winner")
       );
       const sportsArray = filteredData.map((sport: any) => sport.group);
       const uniqueSports = sportsArray.filter(function (item, pos) {
         return sportsArray.indexOf(item) == pos;
       });
-      setSports(uniqueSports);
+      // Sort sports to put Soccer first
+      const sortedSports = [
+        "Soccer",
+        ...uniqueSports.filter((sport: string) => sport !== "Soccer").sort(),
+      ];
+      setSports(sortedSports);
 
-      const leaguesArray = data.filter(
-        (sport: any) => sport.group === uniqueSports[0]
+      // Set initial tab to Soccer and league to soccer_italy_serie_a
+      const soccerLeagues = filteredData.filter(
+        (sport: any) => sport.group === "Soccer"
       );
-      setLeagues(leaguesArray);
-
-      changeTab(uniqueSports[0]);
-      changeLeagueTab(leaguesArray[0].key);
+      if (soccerLeagues.length > 0) {
+        setLeagues(soccerLeagues);
+        setTab("Soccer");
+        const defaultLeague =
+          soccerLeagues.find(
+            (league: any) => league.key === "soccer_italy_serie_a"
+          )?.key || soccerLeagues[0].key;
+        setLeagueTab(defaultLeague);
+      } else {
+        // Fallback to first sport if Soccer is not available
+        const leaguesArray = filteredData.filter(
+          (sport: any) => sport.group === uniqueSports[0]
+        );
+        setLeagues(leaguesArray);
+        setTab(uniqueSports[0]);
+        setLeagueTab(leaguesArray[0].key);
+      }
     }
   }, [data]);
 
@@ -417,9 +379,6 @@ const Page = () => {
                     ? "shadow shadow-blue-800"
                     : ""
                 }`}
-                // onClick={() =>
-                //   addGameToBetSlip({ game: featuredMatch, home: true })
-                // }
               >
                 {featuredMatch?.home_team}
               </button>
@@ -432,20 +391,9 @@ const Page = () => {
                     ? "shadow shadow-blue-800"
                     : ""
                 }`}
-                // onClick={() =>
-                //   addGameToBetSlip({ game: featuredMatch, home: false })
-                // }
               >
                 {featuredMatch?.away_team}
               </button>
-              {/* <button
-                className="flex justify-center border-4 border-vintage-50 items-center gap-2 p-4 px-8 text-sm w-full md:w-fit 2xl:text-base font-black bg-white rounded-full"
-                onClick={() =>
-                  addGameToBetSlip({ game: featuredMatch, home: true })
-                }
-              >
-                Bet Now
-              </button> */}
             </div>
           </div>
           <div className="w-full transition-all border border-gray-200 rounded-xl bg-[#F8F8F8] flex flex-col">
@@ -470,12 +418,6 @@ const Page = () => {
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger className="bg-white font-bold justify-center w-[95%] text-sm 2xl:text-base md:w-fit p-3.5 py-3 md:mr-3 rounded-full inline-flex items-center gap-2">
-                  {/* <Image
-                    src="/icons/odds.png"
-                    alt="Arrow Icon"
-                    width={23}
-                    height={23}
-                  /> */}
                   <span className="text-[#737897] capitalize">Odds:</span>
                   {oddsFormat}
                   <FaAngleDown className="text-lg ml-0.5 mb-0.5" />
@@ -512,7 +454,7 @@ const Page = () => {
             )}
           </div>
         </div>
-        <div className="w-full md:w-[40%] sticky top-4   border border-gray-200 p-4 rounded-xl bg-white flex flex-col">
+        <div className="w-full md:w-[40%] sticky top-4 border border-gray-200 p-4 rounded-xl bg-white flex flex-col">
           <div className="flex items-start gap-4 mb-5 md:items-center justify-between flex-col md:flex-row w-full">
             <h2 className="font-bold text-lg capitalize">Betting Slip</h2>
             <div className="flex items-center border-gray-[#737897] rounded-lg bg-[#737897]/20">
@@ -647,14 +589,14 @@ const LeaguesTabs = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center justify-center p-3.5 px-5 2xl:px-8 gap-4 bg-white  rounded-full">
+          <button className="flex items-center justify-center p-3.5 px-5 2xl:px-8 gap-4 bg-white rounded-full">
             <p className="text-xs 2xl:text-sm font-bold">
               {leagues?.find((league: any) => league.key === leagueTab)?.title}
             </p>
             <ChevronDown />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className=" max-h-96 overflow-y-auto">
+        <DropdownMenuContent className="max-h-96 overflow-y-auto">
           {leagues?.map((league: any, index: number) =>
             (league.title as string).toLowerCase().includes("winner") ? null : (
               <DropdownMenuItem
