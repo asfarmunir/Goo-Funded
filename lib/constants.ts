@@ -48,7 +48,7 @@ export const navlinks = [
     link: "/community",
   },
   {
-    title: "refer & earn",
+    title: "Affiliates",
     icons: [
       {
         src: "/icons/refer.svg",

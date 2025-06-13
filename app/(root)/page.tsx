@@ -190,7 +190,7 @@ const page = () => {
                 width={18}
                 height={18}
               />
-              ADD ACCOUNT
+              BUY ACCOUNT
             </Link>
           </div>
           <div className=" p-3 md:p-6 bg-white col-span-1 md:col-span-2  overflow-hidden relative min-h-44 2xl:min-h-44 rounded-2xl w-full  flex flex-col gap-1 ">
@@ -291,7 +291,7 @@ const page = () => {
                     width={18}
                     height={18}
                   />
-                  ADD ACCOUNT
+                  BUY ACCOUNT
                 </Link>
               </div>
             </div>
@@ -386,7 +386,7 @@ const page = () => {
             href={"/create-account"}
             className=" inline-flex items-center py-2.5 px-6 rounded-full bg-vintage-50"
           >
-            <span className="ml-2 text-white">Add Account</span>
+            <span className="ml-2 text-white">Buy Account</span>
           </Link>
         </div>
       </div>
