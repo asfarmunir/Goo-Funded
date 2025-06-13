@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaAngleDown } from "react-icons/fa";
@@ -48,6 +49,26 @@ interface Bet {
   };
 }
 
+// Map sports to their respective icon filenames in public/icons
+const sportIcons: Record<string, string> = {
+  Soccer: "football.png",
+  "American Football": "american-football.png",
+  "Aussie Rules": "aussies.png",
+  Baseball: "baseball.png",
+  Basketball: "basketball.png",
+  Boxing: "boxing.png",
+  Cricket: "cricket.png",
+  Golf: "golf.png",
+  "Ice Hockey": "icehockey.png",
+  Lacrosse: "lacrosse.png",
+  "Mixed Martial Arts": "mma.png",
+  Politics: "politics.png",
+  "Rugby League": "rugby.png",
+};
+
+// Default fallback icon
+const DEFAULT_ICON = "trophy.png";
+
 const Page = () => {
   const [tab, setTab] = useState("Soccer");
   const [leagueTab, setLeagueTab] = useState("soccer_italy_serie_a");
@@ -67,7 +88,6 @@ const Page = () => {
 
   // SPORTS DATA
   const { data, isPending, isError } = useGetSports();
-  console.log("🚀 ~ Page ~ data:", data);
 
   // ACCOUNT
   const account = accountStore((state) => state.account);
@@ -559,16 +579,24 @@ const SportsTabs = ({
   tab: string;
   changeTab: (sport: string) => void;
 }) => {
+  console.log("🚀 ~ sports:", sports);
   return (
     <div className="flex bg-white items-center p-4 2xl:p-5 rounded-2xl max-w-full overflow-auto justify-evenly gap-2 mb-3">
       {sports?.map((sport: any, index: number) => (
         <button
           key={index}
-          className={`px-8 text-xs w-68 2xl:text-base py-3 flex justify-center font-bold text-nowrap items-center flex-grow md:flex-grow-0 rounded-full ${
+          className={`px-6 text-xs w-68 2xl:text-base py-3 flex justify-center font-bold text-nowrap items-center flex-grow md:flex-grow-0 rounded-full gap-2 ${
             tab === sport ? "bg-[#0100821A] border" : ""
           } capitalize`}
           onClick={() => changeTab(sport)}
         >
+          <Image
+            src={`/sports/${sportIcons[sport] || DEFAULT_ICON}`}
+            alt={`${sport} icon`}
+            width={20}
+            height={20}
+            className="object-contain"
+          />
           {sport}
         </button>
       ))}

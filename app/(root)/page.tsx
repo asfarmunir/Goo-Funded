@@ -89,7 +89,7 @@ const page = () => {
               Maximize your earnings with minimal risk. Bet confidently using
               our capital and unlock higher rewards!{" "}
             </p>
-            <Dialog>
+            {/* <Dialog>
               <DialogTrigger className=" w-fit text-sm 2xl:text-base  rounded-full bg-vintage-50 px-5 py-3 inline-flex items-center gap-3">
                 <Image
                   src="/icons/video.svg"
@@ -107,7 +107,19 @@ const page = () => {
                   You can find more information on our help tab
                 </DialogDescription>
               </DialogContent>
-            </Dialog>
+            </Dialog> */}
+            <Link
+              href="/create-account"
+              className=" bg-vintage-50 text-white outline-fuchsia-50 font-bold  rounded-full   justify-center w-full md:w-fit text-sm px-4 py-2.5  inline-flex items-center gap-2"
+            >
+              <Image
+                src="/icons/add.png"
+                alt="Arrow Icon"
+                width={18}
+                height={18}
+              />
+              ADD ACCOUNT
+            </Link>
           </div>
           <div className=" p-3 md:p-6 bg-white  overflow-hidden col-span-1 md:col-span-2 relative min-h-44 2xl:min-h-44 rounded-2xl w-full  flex flex-col gap-1 ">
             <div className=" w-full flex items-center justify-between">
@@ -149,7 +161,7 @@ const page = () => {
               Maximize your earnings with minimal risk. Bet confidently using
               our capital and unlock higher rewards!{" "}
             </p>
-            <Dialog>
+            {/* <Dialog>
               <DialogTrigger className=" w-fit text-sm 2xl:text-base  rounded-full bg-vintage-50 px-5 py-3 inline-flex items-center gap-3">
                 <Image
                   src="/icons/video.svg"
@@ -167,7 +179,19 @@ const page = () => {
                   You can find more information on our help tab
                 </DialogDescription>
               </DialogContent>
-            </Dialog>
+            </Dialog> */}
+            <Link
+              href="/create-account"
+              className=" bg-vintage-50 text-white outline-fuchsia-50 font-bold  rounded-full   justify-center w-full md:w-fit text-sm px-4 py-2.5  inline-flex items-center gap-2"
+            >
+              <Image
+                src="/icons/add.png"
+                alt="Arrow Icon"
+                width={18}
+                height={18}
+              />
+              ADD ACCOUNT
+            </Link>
           </div>
           <div className=" p-3 md:p-6 bg-white col-span-1 md:col-span-2  overflow-hidden relative min-h-44 2xl:min-h-44 rounded-2xl w-full  flex flex-col gap-1 ">
             <div className=" w-full flex items-center justify-between">

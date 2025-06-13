@@ -579,22 +579,23 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                           render={({ field }) => (
                             <FormItem className="mb-4 w-full">
                               <FormControl>
-                                <Select required onValueChange={field.onChange}>
-                                  <SelectTrigger className="  focus:outline-none  focus:border mr-0 md:mr-6  rounded-lg bg-[#F2F2F2] w-full p-4  2xl:py-6 2xl:px-6 text-vintage-50 leading-tight ">
-                                    <SelectValue placeholder=" select your country " />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {Object.entries(countries)
-                                      .sort((a, b) =>
-                                        a[1].name.localeCompare(b[1].name)
-                                      )
-                                      .map(([code, { name }]) => (
-                                        <SelectItem key={code} value={name}>
-                                          {name}
-                                        </SelectItem>
-                                      ))}
-                                  </SelectContent>
-                                </Select>
+                                <select
+                                  required
+                                  onChange={field.onChange}
+                                  value={field.value}
+                                  className="focus:outline-none focus:border max-h-[200px] mr-0 md:mr-6 rounded-lg bg-[#F2F2F2] w-full p-3 2xl:px-6 text-vintage-50 leading-tight"
+                                >
+                                  <option value="">Select your country</option>
+                                  {Object.entries(countries)
+                                    .sort((a, b) =>
+                                      a[1].name.localeCompare(b[1].name)
+                                    )
+                                    .map(([code, { name }]) => (
+                                      <option key={code} value={name}>
+                                        {name}
+                                      </option>
+                                    ))}
+                                </select>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
