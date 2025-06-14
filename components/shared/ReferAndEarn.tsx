@@ -163,7 +163,7 @@ const page = () => {
             />
             <p className="text-sm  ">Commission Rate</p>
             <h2 className="text-2xl 2xl:text-3xl text-vintage-50 font-bold">
-              15%{" "}
+              25%{" "}
             </h2>
           </div>
           <div
