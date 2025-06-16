@@ -24,42 +24,42 @@ const two_step: Steps[] = [
   },
   {
     title: "2K",
-    price: "$68",
+    price: "$76",
   },
   {
     title: "5K",
-    price: "$149",
+    price: "$167",
   },
   {
     title: "10K",
-    price: "$289",
+    price: "$324",
   },
   {
     title: "20K",
-    price: "$449",
+    price: "$503",
   },
   {
     title: "50K",
-    price: "$999",
+    price: "$1119",
   },
 ];
 
 const three_step: Steps[] = [
   {
     title: "2K",
-    price: "$36",
+    price: "$40",
   },
   {
     title: "5K",
-    price: "$68",
+    price: "$76",
   },
   {
     title: "10K",
-    price: "$139",
+    price: "$156",
   },
   {
     title: "20K",
-    price: "$279",
+    price: "$312",
   },
 ];
 
