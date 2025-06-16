@@ -1,6 +1,4 @@
 "use client";
-// import { useCreateAccount } from "@/app/hooks/useCreateAccount";
-// import { useCreateConfirmoInvoice } from "@/app/hooks/useCreateConfirmoInvoice";
 import { useCreateCoinbaseInvoice } from "@/app/hooks/useCreateCoinbaseInvoice";
 import { useCreditCardInvoice } from "@/app/hooks/useCreditCardInvoice";
 import { useCreateNowpaymentInvoice } from "@/app/hooks/useCreateNowpaymentInvoice";
@@ -14,13 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { countries } from "countries-list";
 import { useSession } from "next-auth/react";
@@ -31,27 +22,50 @@ import { useForm } from "react-hook-form";
 import { ColorRing } from "react-loader-spinner";
 import { toast } from "react-hot-toast";
 import { FiUploadCloud } from "react-icons/fi";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { z } from "zod";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { MdOutlineClose } from "react-icons/md";
+import Link from "next/link";
+import clsx from "clsx";
 
 const bankDetails = [
-  {
-    bankImage: "/banks/bank1.jpeg",
-    link: "https://t.me/goofundedrecharge",
-    name: "Lbankalik",
-  },
-  {
-    bankImage: "/banks/bank2.jpeg",
-    link: "https://t.me/goofundedrecharge",
-    name: "Banque Populaire",
-  },
   {
     bankImage: "/banks/bank3.jpeg",
     link: "https://t.me/goofundedrecharge",
     name: "CIH",
+    accountNumber: "230690576631522503560129",
+    fullName: "amine bozid",
   },
   {
     bankImage: "/banks/bank4.jpeg",
     link: "https://t.me/goofundedrecharge",
     name: "Attijariwafa Bank",
+    accountNumber: "007690000476530040101458",
+    fullName: "samir alim",
+  },
+  {
+    bankImage: "/banks/bank1.jpeg",
+    link: "https://t.me/goofundedrecharge",
+    name: "Lbankalik",
+    accountNumber: "007690000476530040101458",
+    fullName: "samir alim",
+  },
+  {
+    bankImage: "/banks/bank2.jpeg",
+    link: "https://t.me/goofundedrecharge",
+    name: "Banque Populaire",
   },
   {
     bankImage: "/banks/bank5.jpeg",
@@ -70,16 +84,6 @@ const bankDetails = [
   },
 ];
 
-import { z } from "zod";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { MdOutlineClose } from "react-icons/md";
-import { Checkbox } from "@radix-ui/react-checkbox";
-import Link from "next/link";
-
 const formSchema = z.object({
   firstName: z.string().min(2, {
     message: "First name should be atleast 2 characters",
@@ -90,9 +94,6 @@ const formSchema = z.object({
   country: z.string().min(2, {
     message: "Please enter a your country name",
   }),
-  // phoneNumber: z.string().min(8, {
-  //   message: "phone Number is required",
-  // }),
   state: z.string().min(2, {
     message: "Please enter a valid state name",
   }),
@@ -111,25 +112,13 @@ const paymentCardSchema = z.object({
   paymentCardNumber: z.string().min(16, {
     message: "Please enter a valid card number",
   }),
-
   expirationDate: z.string().min(4, {
     message: "Please enter a valid card expiry",
   }),
   cardSecurityCode: z.string().min(3, {
     message: "Please enter a valid card cvv",
   }),
-  // }),
 });
-
-interface CheckoutPaymentProps {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-}
-
-interface P2PPaymentData {
-  transactionId: string;
-  paymentProof: string[];
-}
 
 const p2pPaymentSchema = z.object({
   transactionId: z.string().min(5, {
@@ -140,16 +129,42 @@ const p2pPaymentSchema = z.object({
   }),
 });
 
+interface CheckoutPaymentProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
 const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
   isOpen,
   setIsOpen,
 }) => {
   const router = useRouter();
-  // url search params
   const searchParams = useSearchParams();
   const accountType = searchParams.get("type");
   const accountSize = searchParams.get("accountSize");
   const accountPrice = searchParams.get("price");
+
+  const [sheetSide, setSheetSide] = useState<"bottom" | "right">("bottom"); // State for sheet side
+
+  // Detect screen size and set sheet side
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setSheetSide("right");
+      } else {
+        setSheetSide("bottom");
+      }
+    };
+
+    // Set initial side
+    handleResize();
+
+    // Add resize listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const { mutateAsync: createPaymentInvoice, isPending: loadingInvoice } =
     useCreateNowpaymentInvoice();
@@ -171,17 +186,14 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
     onError: handleError,
   });
 
-  // user details
   const { status, data: session } = useSession();
 
-  // form
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
       country: "",
-      // phoneNumber: "",
       state: "not_required",
       city: "not_required",
       address: "not_required",
@@ -198,7 +210,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
     },
   });
 
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(2);
   const [actionType, setActionType] = useState("");
   const [billingDetailsData, setBillingDetailsData] = useState({});
   const [coinbaseInvoiceCreated, setCoinbaseInvoiceCreated] = useState(false);
@@ -206,7 +218,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
   useMemo(() => {
     if (typeof window === "undefined") return;
     const localStep = localStorage.getItem("step");
-    setStep(1);
+    setStep(2);
   }, []);
 
   useEffect(() => {
@@ -215,7 +227,6 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
     localStorage.setItem("step", step.toString());
   }, [step]);
 
-  // billing address form submit
   async function onSubmit(values: any) {
     const data = {
       account: {
@@ -247,7 +258,6 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
       try {
         toast.loading("Creating payment invoice...");
         const res = await createPaymentInvoice(data);
-        console.log("🚀 ~ onSubmit ~ res:", res);
         if (res?.invoice_url) {
           newTab.location.href = res.invoice_url;
           toast.dismiss();
@@ -273,42 +283,12 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
     }
   }
 
-  // go back
   const goBack = () => {
     localStorage.removeItem("billing");
     localStorage.removeItem("step");
     setStep(1);
     router.push("/create-account");
   };
-
-  // card form submit
-
-  // async function onSubmitCardPayment(values: any) {
-  //   // create account
-  //   const billing = JSON.parse(localStorage.getItem("billing") || "{}");
-  //   const data = {
-  //     account: {
-  //       accountSize: accountSize,
-  //       accountType:
-  //         accountType === "2"
-  //           ? "TWO_STEP"
-  //           : accountType === "3"
-  //             ? "THREE_STEP"
-  //             : "",
-  //       status: "CHALLENGE",
-  //       accountPrice: accountPrice,
-  //     },
-  //     billingDetailsData,
-  //     paymentCardNumber: values?.paymentCardNumber,
-  //     cardCode: values?.cardSecurityCode,
-  //     expirationDate: values?.expirationDate,
-  //     email: session?.user?.email,
-  //     userId: session?.user ? (session?.user.id ?? "") : "",
-  //   };
-
-  //   // submit to api
-  //   createCreditInvoice(data);
-  // }
 
   const handleClose = () => {
     setIsOpen(false);
@@ -325,49 +305,6 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
     },
   });
 
-  // Cloudinary upload handler using your existing function
-  // const uploadImagesToCloudinary = async (
-  //   files: FileList
-  // ): Promise<string[]> => {
-  //   const uploadPromises = Array.from(files).map((file) => {
-  //     const data = new FormData();
-  //     data.append("file", file);
-  //     data.append("upload_preset", "bluepro");
-  //     data.append("cloud_name", "dbfn18wm7");
-
-  //     return fetch("https://api.cloudinary.com/v1_1/dbfn18wm7/upload", {
-  //       method: "POST",
-  //       body: data,
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => data.secure_url)
-  //       .catch((error) => {
-  //         console.error("Error uploading image:", error);
-  //         return null;
-  //       });
-  //   });
-
-  //   const results = await Promise.all(uploadPromises);
-  //   return results.filter((url) => url !== null) as string[];
-  // };
-
-  // const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     setUploading(true);
-  //     try {
-  //       const uploadedUrls = await uploadImagesToCloudinary(e.target.files);
-  //       p2pPaymentForm.setValue("paymentProof", uploadedUrls);
-  //       toast.success("Payment proof uploaded successfully");
-  //     } catch (error) {
-  //       toast.error("Failed to upload payment proof");
-  //       console.error(error);
-  //     } finally {
-  //       setUploading(false);
-  //     }
-  //   }
-  // };
-
-  // P2P payment submit handler
   async function onSubmitP2PPayment(e: any) {
     e.preventDefault();
     //data object to send to the p2p API
@@ -436,48 +373,47 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
       toast.error("Failed to create invoice");
       newTab.close();
     }
-
     // I used the previous credit card setup here, i requests call to the /person-to-person route.
     // createCreditInvoice(data);
   }
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent className=" rounded-2xl overflow-hidden  md:min-w-[1100px] [scrollbar-width:none] 2xl:min-w-[1400px] h-[95svh] overflow-y-auto p-0">
-        <div className=" w-full h-fit bg-[#F2F2F2]  p-4 2xl:p-6 relative">
+      <AlertDialogContent className="rounded-2xl overflow-hidden md:min-w-[1100px] [scrollbar-width:none] 2xl:min-w-[1400px] h-[95svh] overflow-y-auto p-0">
+        <div className="w-full h-fit bg-[#F2F2F2] p-4 2xl:p-6 relative">
           <h2 className="text-vintage-50 text-xl font-bold 2xl:text-2xl">
             Create Account
           </h2>
           <button
             onClick={handleClose}
-            className=" absolute right-4 top-4 text-black"
+            className="absolute right-4 top-4 text-black"
           >
-            <MdOutlineClose className=" text-2xl" />
+            <MdOutlineClose className="text-2xl" />
           </button>
         </div>
 
         {status === "authenticated" && (
-          <section className=" w-full flex h-full   px-4 md:px-6 gap-8 pt-2 flex-col-reverse md:flex-row justify-center   ">
-            <div className="flex flex-col gap-4 px-3  w-full md:max-w-[60%]">
+          <section className="w-full flex h-full px-4 md:px-6 gap-8 pt-2 flex-col-reverse md:flex-row justify-center">
+            <div className="flex flex-col gap-4 px-3 w-full md:max-w-[60%]">
               {!coinbaseInvoiceCreated && (
                 <div className="flex items-center justify-between gap-4 flex-col md:flex-row">
                   <div>
-                    <h2 className=" text-xl md:text-2xl mb-2.5 font-bold text-vintage-50 ">
+                    <h2 className="text-xl md:text-2xl mb-2.5 font-bold text-vintage-50">
                       Billing Details
                     </h2>
-                    <p className=" text-[#848BAC] -mt-2  ">
-                      Get funded and earn up to 70% of your sports profits.{" "}
+                    <p className="text-[#848BAC] -mt-2">
+                      Get funded and earn up to 70% of your sports profits.
                     </p>
                   </div>
-                  <div className="flex items-center gap-2 w-full md:w-fit ">
-                    <div className=" w-full md:w-52 bg-slate-100 rounded-full h-3">
+                  <div className="flex items-center gap-2 w-full md:w-fit">
+                    <div className="w-full md:w-52 bg-slate-100 rounded-full h-3">
                       <div
-                        className={` ${
+                        className={`${
                           step === 1 ? "w-1/2" : "w-full"
                         } bg-vintage-50 h-full transition-all rounded-full`}
                       ></div>
                     </div>
-                    <p className=" font-semibold">{step}/2</p>
+                    <p className="font-semibold">{step}/2</p>
                   </div>
                 </div>
               )}
@@ -486,12 +422,12 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                 <Form {...form}>
                   <div
                     id="first"
-                    className="flex flex-col  items-center justify-center w-full gap-6 md:gap-4  my-6"
+                    className="flex flex-col items-center justify-center w-full gap-6 md:gap-4 my-6"
                   >
                     <form
                       id="container"
                       onSubmit={form.handleSubmit(onSubmit)}
-                      className=" w-full "
+                      className="w-full"
                     >
                       <div className="flex flex-col md:flex-row items-center justify-between w-full gap-2 md:gap-4">
                         <FormField
@@ -504,7 +440,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                                   required
                                   placeholder="enter your first name"
                                   {...field}
-                                  className="  focus:outline-none  focus:border mr-0 md:mr-6  rounded-lg bg-[#F2F2F2] w-full p-4  2xl:py-6 2xl:px-6 text-vintage-50 leading-tight "
+                                  className="focus:outline-none focus:border mr-0 md:mr-6 rounded-lg bg-[#F2F2F2] w-full p-4 2xl:py-6 2xl:px-6 text-vintage-50 leading-tight"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -519,9 +455,9 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                               <FormControl>
                                 <Input
                                   required
-                                  placeholder=" enter your last name"
+                                  placeholder="enter your last name"
                                   {...field}
-                                  className="  focus:outline-none  focus:border mr-0 md:mr-6  rounded-lg bg-[#F2F2F2] w-full p-4  2xl:py-6 2xl:px-6 text-vintage-50 leading-tight "
+                                  className="focus:outline-none focus:border mr-0 md:mr-6 rounded-lg bg-[#F2F2F2] w-full p-4 2xl:py-6 2xl:px-6 text-vintage-50 leading-tight"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -568,7 +504,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                               readOnly
                               placeholder="enter your email"
                               defaultValue={session?.user?.email}
-                              className="  focus:outline-none  focus:border mr-0 md:mr-6  rounded-lg bg-[#F2F2F2] w-full p-4  2xl:py-6 2xl:px-6 text-vintage-50 leading-tight "
+                              className="focus:outline-none focus:border mr-0 md:mr-6 rounded-lg bg-[#F2F2F2] w-full p-4 2xl:py-6 2xl:px-6 text-vintage-50 leading-tight"
                             />
                           </FormControl>
                           <FormMessage />
@@ -673,15 +609,15 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                           </FormItem>
                         )}
                       /> */}
-                      <p className="text-xs  2xl:text-sm text-[#848BAC]  pl- font-medium  peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      <p className="text-xs 2xl:text-sm text-[#848BAC] pl- font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                         By providing your information, you allow Goo Funded to
                         charge your card for future payments in accordance with
                         their terms.
                       </p>
 
-                      <div className="flex w-full border-t flex-wrap sm:flex-nowrap mb-4  mt-6 gap-2 items-center justify-center">
+                      <div className="flex w-full border-t flex-wrap sm:flex-nowrap mb-4 mt-6 gap-2 items-center justify-center">
                         <button
-                          className="bg-[#001E451A]    border border-slate-100 rounded-full text-vintage-50 font-semibold py-3  px-12 w-full 2xl:text-base text-sm   focus:outline-none focus:shadow-outline"
+                          className="bg-[#001E451A] border border-slate-100 rounded-full text-vintage-50 font-semibold py-3 px-12 w-full 2xl:text-base text-sm focus:outline-none focus:shadow-outline"
                           onClick={goBack}
                         >
                           Back
@@ -689,9 +625,9 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                         <Button
                           type="submit"
                           onClick={() => setActionType("next")}
-                          className="bg-vintage-50   rounded-full  text-white font-semibold py-6 px-12 w-full 2xl:text-base text-sm   focus:outline-none focus:shadow-outline"
+                          className="bg-vintage-50 rounded-full text-white font-semibold py-6 px-12 w-full 2xl:text-base text-sm focus:outline-none focus:shadow-outline"
                         >
-                          <span className=" capitalize">Next</span>
+                          <span className="capitalize">Next</span>
                         </Button>
                         {/* <Button
                           type="submit"
@@ -928,7 +864,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                     </div>
                     <Button
                       type="submit"
-                      className="bg-vintage-50  mb-12  rounded-full  text-white font-semibold py-6 px-12 w-full 2xl:text-base text-sm   focus:outline-none focus:shadow-outline"
+                      className="bg-vintage-50 mb-12 rounded-full text-white font-semibold py-6 px-12 w-full 2xl:text-base text-sm focus:outline-none focus:shadow-outline"
                       disabled={loadingInvoice}
                     >
                       {loadingInvoice ? (
@@ -948,7 +884,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                           ]}
                         />
                       ) : (
-                        <span className=" capitalize">Start Transaction</span>
+                        <span className="capitalize">Start Transaction</span>
                       )}
                     </Button>
                     <div className="mb-4">
@@ -961,28 +897,101 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                     </div>
                     <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
                       {bankDetails.map((detail, index) => (
-                        <Link
-                          href={detail.link}
-                          key={index}
-                          className="block h-full"
-                        >
-                          <div className="h-full bg-[#F8F8F8] shadow-md rounded-lg overflow-hidden hover:shadow-2xl transition-shadow">
-                            <div className="relative aspect-video w-full">
-                              <Image
-                                src={detail.bankImage}
-                                alt="bank transfer"
-                                fill
-                                className="object-contain p-4"
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                              />
+                        <Sheet key={index}>
+                          <SheetTrigger>
+                            <div className="h-full bg-[#F8F8F8] shadow-md rounded-lg overflow-hidden hover:shadow-2xl transition-shadow">
+                              <div className="relative aspect-video w-full">
+                                <Image
+                                  src={detail.bankImage}
+                                  alt={detail.name}
+                                  fill
+                                  className="object-contain p-4"
+                                  sizes="(max-width: 768px) 100vw, 50vw"
+                                />
+                              </div>
+                              <div className="p-4 bg-vintage-50 flex items-center justify-center">
+                                <h3 className="text-lg font-bold text-white">
+                                  {detail.name}
+                                </h3>
+                              </div>
                             </div>
-                            <div className="p-4 bg-vintage-50 flex items-center justify-center">
-                              <h3 className="text-lg font-bold text-white">
-                                {detail.name}
-                              </h3>
+                          </SheetTrigger>
+                          {/* <SheetContent
+                            side="bottom"
+                            className="bg-[#F8F8F8] p-6 rounded-t-2xl"
+                          > */}
+                          <SheetContent
+                            side={sheetSide}
+                            className={clsx(
+                              "bg-[#F8F8F8] p-6 md:min-w-[500px]",
+                              sheetSide === "bottom" && "rounded-t-2xl",
+                              sheetSide === "right" && "rounded-l-2xl"
+                            )}
+                          >
+                            <SheetHeader>
+                              <SheetTitle
+                                className="text-vintage-50 text-2xl font-bold text-right"
+                                dir="rtl"
+                              >
+                                تفاصيل الدفع لـ: {detail.name}
+                              </SheetTitle>
+                            </SheetHeader>
+                            <div className="mt-4 space-y-6" dir="rtl">
+                              <div className="bg-red-100 border border-red-300 rounded-lg p-4 text-red-800 text-sm 2xl:text-base  font-bold text-right">
+                                <p className="mb-2">🚨🚨🚨🚨</p>
+                                <p>
+                                  نقطة مهمة: تمن أي حساب أنه بدولار، لذلك كمثال
+                                  مبلغ حساب 1000$ هو 49$ إذا أرسل 490 درهم،
+                                  وأيضاً حساب 2000$ تمنه 76 دولار إذا أرسل 760
+                                  درهم.
+                                </p>
+                                <p>
+                                  أي مبلغ بدولار اضربه في عشرة وأرسل المبلغ
+                                  بدرهم:
+                                </p>
+                                <p>49$ x 10 = 490dh</p>
+                                <p>76$ x 10 = 760dh</p>
+                              </div>
+                              <div className="bg-white rounded-lg p-4 py-6 shadow-inner">
+                                <p className="text-lg 2xl:text-xl font-semibold text-vintage-50 text-right">
+                                  اسم البنك: {detail.name}
+                                </p>
+                                {detail.accountNumber && (
+                                  <p className="text-sm 2xl:text-base text-gray-700 text-right mt-2">
+                                    <span className="font-medium">
+                                      رقم الحساب البنكي:
+                                    </span>{" "}
+                                    {detail.accountNumber}
+                                  </p>
+                                )}
+                                {detail.fullName && (
+                                  <p className="text-sm 2xl:text-base text-gray-700 text-right mt-2">
+                                    <span className="font-medium">
+                                      الاسم الكامل للمستلم:
+                                    </span>{" "}
+                                    {detail.fullName}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="text-center mt-6">
+                                <p
+                                  className="text-lg font-semibold text-vintage-50 mb-2"
+                                  dir="rtl"
+                                >
+                                  ارسل صورة إيصال هنا
+                                </p>
+                                <a
+                                  href={detail.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-block bg-vintage-50 text-white font-semibold py-3 px-8 rounded-full text-sm 2xl:text-base hover:bg-vintage-100 transition"
+                                >
+                                  إرسال عبر Telegram
+                                </a>
+                              </div>
                             </div>
-                          </div>
-                        </Link>
+                          </SheetContent>
+                        </Sheet>
                       ))}
                     </div>
                   </form>
@@ -997,28 +1006,27 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                     width={100}
                     height={100}
                   />
-
-                  <h2 className="text-xl md:text-2xl mb-2.5 font-bold text-vintage-50 ">
+                  <h2 className="text-xl md:text-2xl mb-2.5 font-bold text-vintage-50">
                     Payment Invoice Created
                   </h2>
-                  <p className="text-[#848BAC] -mt-2  ">
+                  <p className="text-[#848BAC] -mt-2">
                     Please complete the payment on the opened tab
                   </p>
                   <Link
                     href="/"
-                    className="bg-vintage-50 mb-4   rounded-full mt-4 text-white font-semibold py-3.5 text-center px-12 w-full 2xl:text-base text-sm   focus:outline-none focus:shadow-outline"
+                    className="bg-vintage-50 mb-4 rounded-full mt-4 text-white font-semibold py-3.5 text-center px-12 w-full 2xl:text-base text-sm focus:outline-none focus:shadow-outline"
                   >
-                    <span className=" capitalize">Dashboard</span>
+                    <span className="capitalize">Dashboard</span>
                   </Link>
                 </div>
               )}
             </div>
             {!coinbaseInvoiceCreated && (
-              <div className="flex flex-col h-full   gap-3   w-full md:max-w-[40%]">
-                <div className=" bg-[#F8F8F8] p-5 h-[90%] 2xl:p-6 rounded-2xl border border-[#001E451A]">
+              <div className="flex flex-col h-full gap-3 w-full md:max-w-[40%]">
+                <div className="bg-[#F8F8F8] p-5 h-[90%] 2xl:p-6 rounded-2xl border border-[#001E451A]">
                   <div className="flex items-center border-b pb-6 border-slate-300 justify-between">
                     <div>
-                      <h2 className=" text-lg md:text-xl font-bold ">
+                      <h2 className="text-lg md:text-xl font-bold">
                         Refundable Fee
                       </h2>
                       <p className="text-sm text-gray-700">
@@ -1026,8 +1034,8 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                       </p>
                     </div>
                   </div>
-                  <div className=" flex flex-col gap-3 border-b py-6 border-slate-300 ">
-                    <h2 className=" inline-flex text-sm 2xl:text-base font-semibold items-center gap-2">
+                  <div className="flex flex-col gap-3 border-b py-6 border-slate-300">
+                    <h2 className="inline-flex text-sm 2xl:text-base font-semibold items-center gap-2">
                       <Image
                         src="/vintage/images/check.svg"
                         alt="line"
@@ -1037,7 +1045,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                       />
                       One time fee
                     </h2>
-                    <h2 className=" inline-flex text-sm 2xl:text-base font-semibold items-center gap-2">
+                    <h2 className="inline-flex text-sm 2xl:text-base font-semibold items-center gap-2">
                       <Image
                         src="/vintage/images/check.svg"
                         alt="line"
@@ -1048,19 +1056,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                       100% Refundable
                     </h2>
                   </div>
-                  <div className=" flex flex-col gap-3  py-6  ">
-                    {/* <div className="flex items-center justify-between">
-                      <h2 className="font-semibold">original Price</h2>
-                      <p className=" font-semibold">
-                        {" "}
-                        $
-                        {(
-                          parseInt(accountPrice!.replace("$", "")) * 0.12 +
-                          parseInt(accountPrice!.replace("$", ""))
-                        ).toFixed(0)}
-                        .00
-                      </p>
-                    </div> */}
+                  <div className="flex flex-col gap-3 py-6">
                     <div className="flex items-center justify-between">
                       <h2 className="text-lg font-semibold">Total Price</h2>
                       <p className="text-lg font-semibold">
