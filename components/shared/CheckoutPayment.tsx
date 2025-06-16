@@ -958,17 +958,19 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                                 </p>
                                 {detail.accountNumber && (
                                   <p className="text-sm 2xl:text-base text-gray-700 text-right mt-2">
-                                    <span className="font-medium">
+                                    <span className="font-bold">
                                       رقم الحساب البنكي:
-                                    </span>{" "}
+                                    </span>
+                                    {"   "}
                                     {detail.accountNumber}
                                   </p>
                                 )}
                                 {detail.fullName && (
                                   <p className="text-sm 2xl:text-base text-gray-700 text-right mt-2">
-                                    <span className="font-medium">
+                                    <span className="font-bold">
                                       الاسم الكامل للمستلم:
-                                    </span>{" "}
+                                    </span>
+                                    {"   "}
                                     {detail.fullName}
                                   </p>
                                 )}
