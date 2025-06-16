@@ -210,7 +210,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
     },
   });
 
-  const [step, setStep] = useState<number>(2);
+  const [step, setStep] = useState<number>(1);
   const [actionType, setActionType] = useState("");
   const [billingDetailsData, setBillingDetailsData] = useState({});
   const [coinbaseInvoiceCreated, setCoinbaseInvoiceCreated] = useState(false);
@@ -218,7 +218,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
   useMemo(() => {
     if (typeof window === "undefined") return;
     const localStep = localStorage.getItem("step");
-    setStep(2);
+    setStep(1);
   }, []);
 
   useEffect(() => {
@@ -938,26 +938,32 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                             </SheetHeader>
                             <div className="mt-4 space-y-6" dir="rtl">
                               <div className="bg-red-100 border border-red-300 rounded-lg p-4 text-red-800 text-sm 2xl:text-base  font-bold text-right">
-                                <p className="mb-2">🚨🚨🚨🚨</p>
-                                <p>
-                                  نقطة مهمة: تمن أي حساب أنه بدولار، لذلك كمثال
-                                  مبلغ حساب 1000$ هو 49$ إذا أرسل 490 درهم،
-                                  وأيضاً حساب 2000$ تمنه 76 دولار إذا أرسل 760
-                                  درهم.
-                                </p>
-                                <p>
-                                  أي مبلغ بدولار اضربه في عشرة وأرسل المبلغ
-                                  بدرهم:
-                                </p>
-                                <p>49$ x 10 = 490dh</p>
-                                <p>76$ x 10 = 760dh</p>
+                                <div dir="rtl">
+                                  <h3 className="text-lg 2xl:text-2xl text-vintage-50 font-bold mb-2">
+                                    🔹 اختار رأس المال المناسب ليك وبدأ 👇
+                                  </h3>
+                                  <p className="text-sm 2xl:text-xl text-red-800 mb-2">
+                                    (ستقوم بالاداء بدرهم للمقيمين بلمغرب)
+                                  </p>
+                                  <ul className="list-disc 2xl:text-lg list-inside space-y-1 mb-2">
+                                    <li>💵 1000$ 💳 49$ = 490 درهم</li>
+                                    <li>💵 2000$ 💳 76$ = 760 درهم</li>
+                                    <li>💵 5000$ 💳 167$ = 1670 درهم</li>
+                                    <li>💵 10000$ 💳 324$ = 3224 درهم</li>
+                                  </ul>
+                                  <p className="text-sm 2xl:text-xl font-bold">
+                                    ✅ اختر الحساب المناسب لك ، و ارسل المبلغ
+                                    فالحساب اسفله ، وسنقوم برد عليك فأقل من 3
+                                    ساعات 🚨
+                                  </p>
+                                </div>
                               </div>
                               <div className="bg-white rounded-lg p-4 py-6 shadow-inner">
                                 <p className="text-lg 2xl:text-xl font-semibold text-vintage-50 text-right">
                                   اسم البنك: {detail.name}
                                 </p>
                                 {detail.accountNumber && (
-                                  <p className="text-sm 2xl:text-base text-gray-700 text-right mt-2">
+                                  <p className="text-sm  2xl:text-base text-gray-700 text-right mt-2">
                                     <span className="font-bold">
                                       رقم الحساب البنكي:
                                     </span>
