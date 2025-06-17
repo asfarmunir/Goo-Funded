@@ -118,7 +118,7 @@ const page = () => {
                 width={18}
                 height={18}
               />
-              ADD ACCOUNT
+              BUY ACCOUNT
             </Link>
           </div>
           <div className=" p-3 md:p-6 bg-white  overflow-hidden col-span-1 md:col-span-2 relative min-h-44 2xl:min-h-44 rounded-2xl w-full  flex flex-col gap-1 ">

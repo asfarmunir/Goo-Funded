@@ -24,8 +24,9 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import PayoutModal from "@/app/(root)/refer-and-earn/payout-modal";
 import { Loader2 } from "lucide-react";
 import Milestones from "@/components/shared/Milestones";
+import Link from "next/link";
 
-const page = () => {
+const Page = () => {
   const [toggle, setToggle] = useState(false);
   const [copySuccess, setCopySuccess] = useState(""); // To show copy success message
   const currentUser: any = useSession().data?.user;
@@ -123,7 +124,7 @@ const page = () => {
               Refer & Earn
             </h2>
             <p className="text-sm  ">
-              Share your referral code and earn 15% commission
+              Share your referral code and earn 25% commission
             </p>
           </div>
           <div className="flex items-center  gap-3">
@@ -189,6 +190,21 @@ const page = () => {
                 ? "Loading..."
                 : user.user.totalReferPayout.toFixed(2) || 0}{" "}
             </h2>
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row gap-6 items-center justify-between bg-white p-4 md:p-6 rounded-2xl">
+          <div className="">
+            <h2 className="text-lg 2xl:text-xl text-vintage-50 text-center md:text-start font-bold">
+              For any questions about affiliate contact your manager
+            </h2>
+          </div>
+          <div className="flex items-center  gap-3">
+            <Link
+              href={`https://t.me/elenagoofunded`}
+              className="text-white  font-semibold hover:border hover:border-primary-200 uppercase text-[10px] text-nowrap md:text-base 2xl:text-base bg-vintage-50 px-8 py-3.5 rounded-full inline-flex items-center gap-3"
+            >
+              Contact Manager
+            </Link>
           </div>
         </div>
         <div className="w-full  rounded-xl p-4 md:p-6  flex flex-col space-y-5 bg-white ">
@@ -312,4 +328,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

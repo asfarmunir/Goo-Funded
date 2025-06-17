@@ -229,15 +229,15 @@ export const BONUS = 50;
 export const REFER_COMMISSIONS = {
   level1: {
     target: 10,
-    commission: 0.15, // 15%
+    commission: 0.25, // 15%
   },
   level2: {
     target: 50,
-    commission: 0.15, // 15%
+    commission: 0.25, // 15%
   },
   level3: {
     target: 100,
-    commission: 0.2, // 20%
+    commission: 0.25, // 25%
   },
 };
 

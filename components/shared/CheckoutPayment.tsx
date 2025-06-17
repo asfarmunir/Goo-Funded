@@ -71,6 +71,8 @@ const bankDetails = [
     bankImage: "/banks/bank5.jpeg",
     link: "https://t.me/goofundedrecharge",
     name: "Bank of Africa",
+    accountNumber: "011500000011200000289902",
+    fullName: "service",
   },
   {
     bankImage: "/banks/bank6.jpeg",
@@ -191,9 +193,9 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      country: "",
+      firstName: "not_required",
+      lastName: "not_required",
+      country: "not_required",
       state: "not_required",
       city: "not_required",
       address: "not_required",
@@ -210,22 +212,24 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
     },
   });
 
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(2);
   const [actionType, setActionType] = useState("");
-  const [billingDetailsData, setBillingDetailsData] = useState({});
+  const [billingDetailsData, setBillingDetailsData] = useState({
+    firstName: "not_required",
+    lastName: "not_required",
+    country: "not_required",
+    state: "not_required",
+    city: "not_required",
+    address: "not_required",
+    postalCode: "not_required",
+  });
   const [coinbaseInvoiceCreated, setCoinbaseInvoiceCreated] = useState(false);
 
   useMemo(() => {
     if (typeof window === "undefined") return;
     const localStep = localStorage.getItem("step");
-    setStep(1);
+    setStep(2);
   }, []);
-
-  useEffect(() => {
-    const localStep = localStorage.getItem("step");
-    if (step === 1 && localStep !== "2") return;
-    localStorage.setItem("step", step.toString());
-  }, [step]);
 
   async function onSubmit(values: any) {
     const data = {
@@ -393,7 +397,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
         </div>
 
         {status === "authenticated" && (
-          <section className="w-full flex h-full px-4 md:px-6 gap-8 pt-2 flex-col-reverse md:flex-row justify-center">
+          <section className="w-full flex h-full px-4 md:px-6 gap-8 pt-2 flex-col md:flex-row justify-center">
             <div className="flex flex-col gap-4 px-3 w-full md:max-w-[60%]">
               {!coinbaseInvoiceCreated && (
                 <div className="flex items-center justify-between gap-4 flex-col md:flex-row">
@@ -405,7 +409,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                       Get funded and earn up to 70% of your sports profits.
                     </p>
                   </div>
-                  <div className="flex items-center gap-2 w-full md:w-fit">
+                  {/* <div className="flex items-center gap-2 w-full md:w-fit">
                     <div className="w-full md:w-52 bg-slate-100 rounded-full h-3">
                       <div
                         className={`${
@@ -414,7 +418,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                       ></div>
                     </div>
                     <p className="font-semibold">{step}/2</p>
-                  </div>
+                  </div> */}
                 </div>
               )}
 
@@ -1030,7 +1034,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
               )}
             </div>
             {!coinbaseInvoiceCreated && (
-              <div className="flex flex-col h-full gap-3 w-full md:max-w-[40%]">
+              <div className="flex flex-col  h-fit gap-3 w-full md:max-w-[40%]">
                 <div className="bg-[#F8F8F8] p-5 h-[90%] 2xl:p-6 rounded-2xl border border-[#001E451A]">
                   <div className="flex items-center border-b pb-6 border-slate-300 justify-between">
                     <div>
