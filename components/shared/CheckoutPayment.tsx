@@ -63,16 +63,16 @@ const bankDetails = [
     fullName: "samir alim",
   },
   {
-    bankImage: "/banks/bank2.jpeg",
-    link: "https://t.me/goofundedrecharge",
-    name: "Banque Populaire",
-  },
-  {
     bankImage: "/banks/bank5.jpeg",
     link: "https://t.me/goofundedrecharge",
     name: "Bank of Africa",
     accountNumber: "011500000011200000289902",
     fullName: "service",
+  },
+  {
+    bankImage: "/banks/bank2.jpeg",
+    link: "https://t.me/goofundedrecharge",
+    name: "Banque Populaire",
   },
   {
     bankImage: "/banks/bank6.jpeg",
@@ -899,7 +899,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                         Select the prefered bank to complete your payment.
                       </p>
                     </div>
-                    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="w-full grid grid-cols-2 md:grid-cols-2 gap-4">
                       {bankDetails.map((detail, index) => (
                         <Sheet key={index}>
                           <SheetTrigger>
@@ -914,7 +914,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
                                 />
                               </div>
                               <div className="p-4 bg-vintage-50 flex items-center justify-center">
-                                <h3 className="text-lg font-bold text-white">
+                                <h3 className="text-sm md:text-lg font-bold text-white">
                                   {detail.name}
                                 </h3>
                               </div>
