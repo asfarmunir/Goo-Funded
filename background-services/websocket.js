@@ -90,7 +90,6 @@ async function handleWin(bet, account) {
       },
     },
   });
-  console.log("🚀 ~ yaha hain" )
   await sendAppNotification(
     bet.userId,
     "ALERT",
@@ -449,7 +448,7 @@ async function checkForUpdates(wss) {
 
       let betResult;
       if (legResults.every((result) => result === "PUSH")) {
-        betResult = "PUSH";
+        betResult = "LOSE"; // All legs pushed, treat as loss, pehly idhr PUSH tha
       } else if (legResults.includes("LOSE")) {
         betResult = "LOSE";
       } else if (legResults.some((result) => result === "PUSH")) {
@@ -458,7 +457,7 @@ async function checkForUpdates(wss) {
           .map((result, index) => (result === "WIN" ? index : null))
           .filter((index) => index !== null);
         if (winningLegs.length === 0) {
-          betResult = "PUSH";
+          betResult = "LOSE"; // All legs lost, treat as loss
         } else {
           betResult = "WIN";
           // Adjust winnings (simplified: assume odds provided are correct)
