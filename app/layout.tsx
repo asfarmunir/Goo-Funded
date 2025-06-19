@@ -7,6 +7,7 @@ import AuthProvider from "./api/auth/AuthProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Providers } from "./providers";
+import Script from "next/script";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -34,6 +35,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning suppressContentEditableWarning>
       <Providers>
         <AuthProvider>
+          <Script
+            strategy="lazyOnload"
+            src={`https://embed.tawk.to/6853d7a6c96da61913b6fcb2/1iu3o4p51`}
+            async
+            charSet="UTF-8"
+            //@ts-ignore
+            crossOrigin="*"
+          />
           <body className={`${roboto.className} ${urbanist.className}`}>
             <NextTopLoader
               color="blue"

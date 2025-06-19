@@ -45,7 +45,7 @@ const bankDetails = [
     bankImage: "/banks/bank3.jpeg",
     link: "https://t.me/goofundedrecharge",
     name: "CIH",
-    accountNumber: "230690576631522503560129",
+    accountNumber: "230690362431321100750055",
     fullName: "amine bozid",
   },
   {
